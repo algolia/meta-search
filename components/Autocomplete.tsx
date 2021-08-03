@@ -11,9 +11,9 @@ import algoliasearch from 'algoliasearch/lite';
 
 import { ClearIcon } from './ClearIcon';
 import { SearchIcon } from './SearchIcon';
+import { toItemUrl } from '../utils/toItemUrl';
 
 import '@algolia/autocomplete-theme-classic';
-import { toItemUrl } from '../utils/toItemUrl';
 
 const searchClient = algoliasearch(
   'T2ZX9HO66V',
