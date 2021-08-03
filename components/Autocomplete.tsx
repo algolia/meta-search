@@ -20,9 +20,12 @@ const searchClient = algoliasearch(
   'e96fadfb2ec42760dfe83bd9e46209ad'
 );
 
-type AutocompleteItem = Hit<{}>;
+type ItemWrapperParams = {
+  item: AutocompleteItem;
+  children: React.ReactNode;
+}
 
-function ItemWrapper({ item, children }) {
+function ItemWrapper({ item, children }: ItemWrapperParams) {
   if (item.fields.route) {
     return (
       <Link href={toItemUrl(item.fields.route['en-US'])}>
@@ -39,6 +42,10 @@ function ItemWrapper({ item, children }) {
     </div>
   )
 }
+
+type AutocompleteItem = Hit<{
+  fields: Record<string, any>;
+}>;
 
 export function Autocomplete(
   props: Partial<AutocompleteOptions<AutocompleteItem>>
