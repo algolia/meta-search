@@ -54,6 +54,14 @@ export function createDocsPlugin() {
                 </Link>
               );
             },
+            Header() {
+              return (
+                <div>
+                  <span className="aa-SourceHeaderTitle">Documentations</span>
+                  <div className="aa-SourceHeaderLine"></div>
+                </div>
+              );
+            },
             Preview({ item }) {
               return (
                 <div>

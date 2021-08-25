@@ -65,6 +65,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
                 </MetaSearchItemWrapper>
               );
             },
+            Header() {
+              return (
+                <div>
+                  <span className="aa-SourceHeaderTitle">Navigation</span>
+                  <div className="aa-SourceHeaderLine"></div>
+                </div>
+              );
+            },
             Preview({ item }) {
               return (
                 <div>
