@@ -1,9 +1,4 @@
 import React from "react";
-import {
-  AutocompleteOptions,
-  createAutocomplete,
-} from "@algolia/autocomplete-core";
-import { Hit } from "@algolia/client-search";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
@@ -13,70 +8,33 @@ import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
 import "@algolia/autocomplete-theme-classic";
 
 import { createNavigationPlugin } from "./MetaSearchPluginNavigation";
-import { MetaSearchItem, MetaSearchSource, MetaSearchState } from "./types";
+import { MetaSearchSource } from "./types";
 import { createDocsPlugin } from "./MetaSearchPluginDocs";
+import { useCloseVirtualKeyboardOnTouchMove } from "../hooks/useCloseVirtualKeyboardOnTouchMove";
 
-export function Autocomplete(
-  props: Partial<AutocompleteOptions<MetaSearchItem>>
-) {
-  const [autocompleteState, setAutocompleteState] =
-    React.useState<MetaSearchState>({
-      collections: [],
-      completion: null,
-      context: {},
-      isOpen: false,
-      query: "",
-      activeItemId: null,
-      status: "idle",
-    });
-  const autocomplete = React.useMemo(
-    () =>
-      createAutocomplete<
-        MetaSearchItem,
-        React.BaseSyntheticEvent,
-        React.MouseEvent,
-        React.KeyboardEvent
-      >({
-        id: "meta-search",
-        openOnFocus: true,
-        defaultActiveItemId: 0,
-        plugins: [
-          createListenerPlugin({}),
-          createNavigationPlugin(),
-          createDocsPlugin(),
-        ],
-        onStateChange({ state }) {
-          setAutocompleteState(state);
-        },
+import { useAutocomplete } from "../hooks";
+import { useMemo } from "react";
 
-        ...props,
-      }),
-    [props]
+export function MetaSearch() {
+  const plugins = useMemo(
+    () => [
+      createListenerPlugin({}),
+      createNavigationPlugin(),
+      createDocsPlugin(),
+    ],
+    []
   );
+  const { autocomplete, state } = useAutocomplete({
+    id: "meta-search",
+    openOnFocus: true,
+    defaultActiveItemId: 0,
+    plugins,
+  });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
-  const { getEnvironmentProps } = autocomplete;
 
-  React.useEffect(() => {
-    if (!formRef.current || !panelRef.current || !inputRef.current) {
-      return undefined;
-    }
-
-    const { onTouchStart, onTouchMove } = getEnvironmentProps({
-      formElement: formRef.current,
-      inputElement: inputRef.current,
-      panelElement: panelRef.current,
-    });
-
-    window.addEventListener("touchstart", onTouchStart);
-    window.addEventListener("touchmove", onTouchMove);
-
-    return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
-  }, [getEnvironmentProps, formRef, inputRef, panelRef]);
+  useCloseVirtualKeyboardOnTouchMove({ inputRef });
 
   return (
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
@@ -111,14 +69,14 @@ export function Autocomplete(
         className={[
           "aa-Panel",
           "aa-Panel--desktop",
-          autocompleteState.status === "stalled" && "aa-Panel--stalled",
+          state.status === "stalled" && "aa-Panel--stalled",
         ]
           .filter(Boolean)
           .join(" ")}
         {...autocomplete.getPanelProps({})}
       >
         <div className="aa-PanelLayout aa-Panel--scrollable">
-          {autocompleteState.collections.map((collection, index) => {
+          {state.collections.map((collection, index) => {
             const items = collection.items;
             const source = collection.source as MetaSearchSource<any>;
             const { Header, Item } = source.components;
@@ -127,11 +85,7 @@ export function Autocomplete(
               items.length > 0 && (
                 <section key={`source-${index}`} className="aa-Source">
                   {Header && (
-                    <Header
-                      items={items}
-                      source={source}
-                      state={autocompleteState}
-                    />
+                    <Header items={items} source={source} state={state} />
                   )}
 
                   <ul className="aa-List" {...autocomplete.getListProps()}>
@@ -142,11 +96,7 @@ export function Autocomplete(
                           className="aa-Item"
                           {...autocomplete.getItemProps({ item, source })}
                         >
-                          <Item
-                            item={item}
-                            source={source}
-                            state={autocompleteState}
-                          />
+                          <Item item={item} source={source} state={state} />
                         </li>
                       );
                     })}
@@ -157,7 +107,7 @@ export function Autocomplete(
           })}
 
           <aside>
-            <MetaSearchPanelSwitch state={autocompleteState} fallback={null} />
+            <MetaSearchPanelSwitch state={state} fallback={null} />
           </aside>
         </div>
       </div>
