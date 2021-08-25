@@ -134,25 +134,23 @@ export function Autocomplete(
                     />
                   )}
 
-                  {items.length > 0 && (
-                    <ul className="aa-List" {...autocomplete.getListProps()}>
-                      {items.map((item) => {
-                        return (
-                          <li
-                            key={item.objectID}
-                            className="aa-Item"
-                            {...autocomplete.getItemProps({ item, source })}
-                          >
-                            <Item
-                              item={item}
-                              source={source}
-                              state={autocompleteState}
-                            />
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
+                  <ul className="aa-List" {...autocomplete.getListProps()}>
+                    {items.map((item) => {
+                      return (
+                        <li
+                          key={item.objectID}
+                          className="aa-Item"
+                          {...autocomplete.getItemProps({ item, source })}
+                        >
+                          <Item
+                            item={item}
+                            source={source}
+                            state={autocompleteState}
+                          />
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </section>
               )
             );
