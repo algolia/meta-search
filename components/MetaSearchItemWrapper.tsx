@@ -20,5 +20,5 @@ export function MetaSearchItemWrapper({
     );
   }
 
-  return <div className="aa-MetaSearchItemWrapper">{children}</div>;
+  return <div className="aa-ItemWrapper">{children}</div>;
 }

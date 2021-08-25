@@ -159,7 +159,7 @@ export function Autocomplete(
           })}
 
           <aside>
-            <MetaSearchPanelSwitch state={autocompleteState} />
+            <MetaSearchPanelSwitch state={autocompleteState} fallback={null} />
           </aside>
         </div>
       </div>
