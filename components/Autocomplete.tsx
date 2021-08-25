@@ -7,18 +7,14 @@ import {
 } from "@algolia/autocomplete-core";
 import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
 import { Hit } from "@algolia/client-search";
-import algoliasearch from "algoliasearch/lite";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
 import { toItemUrl } from "../utils/toItemUrl";
+import { createListenerPlugin } from "./MetaSearchPluginListener";
 
+import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
 import "@algolia/autocomplete-theme-classic";
-
-const searchClient = algoliasearch(
-  "T2ZX9HO66V",
-  "e96fadfb2ec42760dfe83bd9e46209ad"
-);
 
 // algolia docs
 const algoliaDocsSearchClient = algoliasearch(
@@ -69,6 +65,9 @@ export function Autocomplete(
         React.MouseEvent,
         React.KeyboardEvent
       >({
+        openOnFocus: true,
+        defaultActiveItemId: 0,
+        plugins: [createListenerPlugin({})],
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
@@ -180,51 +179,78 @@ export function Autocomplete(
         </div>
       </form>
 
-      {autocompleteState.isOpen && (
-        <div
-          ref={panelRef}
-          className={[
-            "aa-Panel",
-            "aa-Panel--desktop",
-            autocompleteState.status === "stalled" && "aa-Panel--stalled"
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          {...autocomplete.getPanelProps({})}
-        >
-          <div className="aa-PanelLayout aa-Panel--scrollable">
-            {autocompleteState.collections.map((collection, index) => {
-              const { source, items } = collection;
+      <div
+        ref={panelRef}
+        className={[
+          "aa-Panel",
+          "aa-Panel--desktop",
+          autocompleteState.status === "stalled" && "aa-Panel--stalled"
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        {...autocomplete.getPanelProps({})}
+      >
+        <div className="aa-PanelLayout aa-Panel--scrollable">
+          {autocompleteState.collections.map((collection, index) => {
+            const { source, items } = collection;
 
-              return (
-                <section key={`source-${index}`} className="aa-Source">
-                  <div>
-                    <span className="aa-SourceHeaderTitle">
-                      {source.sourceId}
-                    </span>
-                    <div className="aa-SourceHeaderLine"></div>
-                  </div>
-                  {items.length > 0 && (
-                    <ul className="aa-List" {...autocomplete.getListProps()}>
-                      {items.map((item) => {
-                        return (
-                          <li
-                            key={item.objectID}
-                            className="aa-Item"
-                            {...autocomplete.getItemProps({ item, source })}
-                          >
-                            {source.sourceId === "navigation" && (
-                              <ItemWrapper item={item}>
+            return (
+              <section key={`source-${index}`} className="aa-Source">
+                <div>
+                  <span className="aa-SourceHeaderTitle">
+                    {source.sourceId}
+                  </span>
+                  <div className="aa-SourceHeaderLine"></div>
+                </div>
+                {items.length > 0 && (
+                  <ul className="aa-List" {...autocomplete.getListProps()}>
+                    {items.map((item) => {
+                      return (
+                        <li
+                          key={item.objectID}
+                          className="aa-Item"
+                          {...autocomplete.getItemProps({ item, source })}
+                        >
+                          {source.sourceId === "navigation" && (
+                            <ItemWrapper item={item}>
+                              <div className="aa-ItemContent">
+                                <div className="aa-ItemContentBody">
+                                  <div className="aa-ItemContentTitle">
+                                    {item.fields.name["en-US"]}
+                                  </div>
+                                  {item.fields.category && (
+                                    <div className="aa-ItemContentSubtitle">
+                                      {item.fields.category["en-US"]}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="aa-ItemActions">
+                                <button
+                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
+                                  type="button"
+                                  title="Select"
+                                  style={{ pointerEvents: "none" }}
+                                >
+                                  <svg fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
+                                  </svg>
+                                </button>
+                              </div>
+                            </ItemWrapper>
+                          )}
+                          {source.sourceId === "docs" && (
+                            <Link href="#">
+                              <a className="aa-ItemLink">
                                 <div className="aa-ItemContent">
                                   <div className="aa-ItemContentBody">
                                     <div className="aa-ItemContentTitle">
-                                      {item.fields.name["en-US"]}
+                                      {item.title}
                                     </div>
-                                    {item.fields.category && (
-                                      <div className="aa-ItemContentSubtitle">
-                                        {item.fields.category["en-US"]}
-                                      </div>
-                                    )}
+                                    <div class="aa-ItemContentSubtitle">
+                                      {item.content_structure.lvl0} &gt;{" "}
+                                      {item.content_structure.lvl1}
+                                    </div>
                                   </div>
                                 </div>
                                 <div className="aa-ItemActions">
@@ -242,51 +268,23 @@ export function Autocomplete(
                                     </svg>
                                   </button>
                                 </div>
-                              </ItemWrapper>
-                            )}
-                            {source.sourceId === "docs" && (
-                              <Link href="#">
-                                <a className="aa-ItemLink">
-                                  <div className="aa-ItemContent">
-                                    <div className="aa-ItemContentBody">
-                                      <div className="aa-ItemContentTitle">
-                                        {item.title}
-                                      </div>
-                                      <div class="aa-ItemContentSubtitle">
-                                        {item.content_structure.lvl0} &gt;{" "}
-                                        {item.content_structure.lvl1}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="aa-ItemActions">
-                                    <button
-                                      className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                      type="button"
-                                      title="Select"
-                                      style={{ pointerEvents: "none" }}
-                                    >
-                                      <svg
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                      >
-                                        <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </a>
-                              </Link>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  )}
-                </section>
-              );
-            })}
-          </div>
+                              </a>
+                            </Link>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </section>
+            );
+          })}
+
+          <aside>
+            <MetaSearchPanelSwitch state={autocompleteState} />
+          </aside>
         </div>
-      )}
+      </div>
     </div>
   );
 }
