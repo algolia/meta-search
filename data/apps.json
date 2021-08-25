@@ -1,0 +1,42 @@
+[
+  {
+    "application_id": "BH4D9OD16A",
+    "user_id": 16313,
+    "name": "DocSearch",
+    "plan_name": "free",
+    "current_user_is_owner": false,
+    "relogin_required": false
+  },
+  {
+    "application_id": "DSW01O6QPF",
+    "user_id": 699,
+    "name": "DOCSEARCH-HUB",
+    "plan_name": "free",
+    "current_user_is_owner": true,
+    "relogin_required": false
+  },
+  {
+    "application_id": "T2ZX9HO66V",
+    "user_id": 699,
+    "name": "Main app",
+    "plan_name": "free",
+    "current_user_is_owner": true,
+    "relogin_required": false
+  },
+  {
+    "application_id": "3QSHZRTGBZ",
+    "user_id": 105496,
+    "name": "pokedex",
+    "plan_name": "free",
+    "current_user_is_owner": false,
+    "relogin_required": false
+  },
+  {
+    "application_id": "OWD8XOXT0U",
+    "user_id": 699,
+    "name": "searchstone",
+    "plan_name": "free",
+    "current_user_is_owner": true,
+    "relogin_required": false
+  }
+]

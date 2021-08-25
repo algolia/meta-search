@@ -1,0 +1,116 @@
+{
+  "items": [
+    {
+      "name": "dev_dribbble",
+      "createdAt": "2014-11-27T18:18:34.16Z",
+      "updatedAt": "2021-03-16T10:10:17.231Z",
+      "entries": 1294532,
+      "dataSize": 3054411903,
+      "fileSize": 2995997108,
+      "lastBuildTimeS": 165,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "nounIcons",
+      "createdAt": "2015-01-18T16:59:35.377Z",
+      "updatedAt": "2021-03-16T10:10:17.231Z",
+      "entries": 179201,
+      "dataSize": 248887440,
+      "fileSize": 223833553,
+      "lastBuildTimeS": 172,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "aa-red_staples_rp30d",
+      "createdAt": "2021-04-01T12:08:55.433Z",
+      "updatedAt": "2021-04-01T12:09:00.678Z",
+      "entries": 83838,
+      "dataSize": 13749291,
+      "fileSize": 42798503,
+      "lastBuildTimeS": 4,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "aa-red_staples_rp30d_0413",
+      "createdAt": "2021-04-14T06:47:24.399Z",
+      "updatedAt": "2021-04-14T06:48:35.587Z",
+      "entries": 82402,
+      "dataSize": 45896059,
+      "fileSize": 109644624,
+      "lastBuildTimeS": 7,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "AppStore TVShow",
+      "createdAt": "2015-03-16T13:55:42.738Z",
+      "updatedAt": "2021-03-16T10:10:17.223Z",
+      "entries": 68531,
+      "dataSize": 40689944,
+      "fileSize": 49526652,
+      "lastBuildTimeS": 9,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "aa-red_staples_query-classification",
+      "createdAt": "2021-03-02T09:25:57.970Z",
+      "updatedAt": "2021-03-12T07:42:48.970Z",
+      "entries": 55873,
+      "dataSize": 8508931,
+      "fileSize": 15633864,
+      "lastBuildTimeS": 0,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "dev_tseed_14588785_unfollow",
+      "createdAt": "2015-09-01T22:27:38.279Z",
+      "updatedAt": "2021-03-16T10:10:17.243Z",
+      "entries": 42246,
+      "dataSize": 32828086,
+      "fileSize": 35804552,
+      "lastBuildTimeS": 174,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "dev_tseed_560454290_unfollow",
+      "createdAt": "2015-09-03T09:18:06.236Z",
+      "updatedAt": "2021-03-16T10:10:17.211Z",
+      "entries": 32781,
+      "dataSize": 26032387,
+      "fileSize": 28291693,
+      "lastBuildTimeS": 7,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "dev_marvel_comics",
+      "createdAt": "2015-05-10T01:51:23.152Z",
+      "updatedAt": "2021-03-16T10:10:17.224Z",
+      "entries": 29512,
+      "dataSize": 102445305,
+      "fileSize": 64180559,
+      "lastBuildTimeS": 11,
+      "building": 0,
+      "pendingTask": false
+    },
+    {
+      "name": "aa-red_staples_fbt",
+      "createdAt": "2021-04-01T12:07:21.582Z",
+      "updatedAt": "2021-04-01T12:07:22.393Z",
+      "entries": 21980,
+      "dataSize": 1274798,
+      "fileSize": 4835245,
+      "lastBuildTimeS": 2,
+      "building": 0,
+      "pendingTask": false
+    }
+  ],
+  "nbIndexes": 10,
+  "nbPages": 1
+}
