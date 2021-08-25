@@ -1,4 +1,4 @@
-import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
+import { getAlgoliaResults } from "@algolia/autocomplete-js";
 
 import { searchClient } from "../src/searchClient";
 import { toItemUrl } from "../utils/toItemUrl";
@@ -22,6 +22,8 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
                     hitsPerPage: 5,
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
+                    facets: ["fields.type.en-US"],
+                    facetFilters: ["fields.type.en-US:view"],
                   },
                 },
               ],

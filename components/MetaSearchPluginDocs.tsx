@@ -1,16 +1,19 @@
-import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
+import { getAlgoliaResults } from "@algolia/autocomplete-js";
 import Link from "next/link";
 
 import { searchClientDocs } from "../src/searchClientDocs";
 
 export function createDocsPlugin() {
   return {
-    getSources() {
+    getSources({ query }) {
+      if (!query) {
+        return [];
+      }
       return [
         {
           sourceId: "docs",
           getItemInputValue: ({ state }) => state.query,
-          getItems({ query }) {
+          getItems() {
             return getAlgoliaResults({
               searchClient: searchClientDocs,
               queries: [
