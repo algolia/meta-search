@@ -1,128 +1,55 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
+import React from "react";
 import {
   AutocompleteOptions,
-  AutocompleteState,
-  createAutocomplete
+  createAutocomplete,
 } from "@algolia/autocomplete-core";
-import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
 import { Hit } from "@algolia/client-search";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
-import { toItemUrl } from "../utils/toItemUrl";
 import { createListenerPlugin } from "./MetaSearchPluginListener";
 
 import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
 import "@algolia/autocomplete-theme-classic";
 
-// algolia docs
-const algoliaDocsSearchClient = algoliasearch(
-  "B1G2GM9NG0",
-  "3ec8b05f457a8e2637cb430fb3806569"
-);
-
-type ItemWrapperParams = {
-  item: AutocompleteItem;
-  children: React.ReactNode;
-};
-
-function ItemWrapper({ item, children }: ItemWrapperParams) {
-  if (item.fields.route) {
-    return (
-      <Link href={toItemUrl(item.fields.route["en-US"])}>
-        <a className="aa-ItemLink">{children}</a>
-      </Link>
-    );
-  }
-
-  return <div className="aa-ItemWrapper">{children}</div>;
-}
-
-type AutocompleteItem = Hit<{
-  fields: Record<string, any>;
-}>;
+import { createNavigationPlugin } from "./MetaSearchPluginNavigation";
+import { MetaSearchItem, MetaSearchSource, MetaSearchState } from "./types";
+import { createDocsPlugin } from "./MetaSearchPluginDocs";
 
 export function Autocomplete(
-  props: Partial<AutocompleteOptions<AutocompleteItem>>
+  props: Partial<AutocompleteOptions<MetaSearchItem>>
 ) {
-  const [autocompleteState, setAutocompleteState] = React.useState<
-    AutocompleteState<AutocompleteItem>
-  >({
-    collections: [],
-    completion: null,
-    context: {},
-    isOpen: false,
-    query: "",
-    activeItemId: null,
-    status: "idle"
-  });
+  const [autocompleteState, setAutocompleteState] =
+    React.useState<MetaSearchState>({
+      collections: [],
+      completion: null,
+      context: {},
+      isOpen: false,
+      query: "",
+      activeItemId: null,
+      status: "idle",
+    });
   const autocomplete = React.useMemo(
     () =>
       createAutocomplete<
-        AutocompleteItem,
+        MetaSearchItem,
         React.BaseSyntheticEvent,
         React.MouseEvent,
         React.KeyboardEvent
       >({
+        id: "meta-search",
         openOnFocus: true,
         defaultActiveItemId: 0,
-        plugins: [createListenerPlugin({})],
+        plugins: [
+          createListenerPlugin({}),
+          createNavigationPlugin(),
+          createDocsPlugin(),
+        ],
         onStateChange({ state }) {
           setAutocompleteState(state);
         },
-        getSources() {
-          return [
-            {
-              sourceId: "navigation",
-              getItems({ query }) {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: "dev_meta",
-                      query,
-                      params: {
-                        hitsPerPage: 5,
-                        highlightPreTag: "<mark>",
-                        highlightPostTag: "</mark>"
-                      }
-                    }
-                  ]
-                });
-              },
-              getItemUrl({ item }) {
-                if (!item.fields.route) {
-                  return undefined;
-                }
 
-                return toItemUrl(item.fields.route["en-US"]);
-              }
-            },
-            {
-              // ----------------
-              // Algolia Docs
-              // ----------------
-              sourceId: "docs",
-              getItemInputValue: ({ state }) => state.query,
-              getItems({ query }) {
-                return getAlgoliaResults({
-                  searchClient: algoliaDocsSearchClient,
-                  queries: [
-                    {
-                      indexName: "documentation_production",
-                      query,
-                      params: {
-                        hitsPerPage: 5
-                      }
-                    }
-                  ]
-                });
-              }
-            }
-          ];
-        },
-        ...props
+        ...props,
       }),
     [props]
   );
@@ -139,7 +66,7 @@ export function Autocomplete(
     const { onTouchStart, onTouchMove } = getEnvironmentProps({
       formElement: formRef.current,
       inputElement: inputRef.current,
-      panelElement: panelRef.current
+      panelElement: panelRef.current,
     });
 
     window.addEventListener("touchstart", onTouchStart);
@@ -184,7 +111,7 @@ export function Autocomplete(
         className={[
           "aa-Panel",
           "aa-Panel--desktop",
-          autocompleteState.status === "stalled" && "aa-Panel--stalled"
+          autocompleteState.status === "stalled" && "aa-Panel--stalled",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -192,91 +119,42 @@ export function Autocomplete(
       >
         <div className="aa-PanelLayout aa-Panel--scrollable">
           {autocompleteState.collections.map((collection, index) => {
-            const { source, items } = collection;
+            const items = collection.items;
+            const source = collection.source as MetaSearchSource<any>;
+            const { Header, Item } = source.components;
 
             return (
-              <section key={`source-${index}`} className="aa-Source">
-                <div>
-                  <span className="aa-SourceHeaderTitle">
-                    {source.sourceId}
-                  </span>
-                  <div className="aa-SourceHeaderLine"></div>
-                </div>
-                {items.length > 0 && (
-                  <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item) => {
-                      return (
-                        <li
-                          key={item.objectID}
-                          className="aa-Item"
-                          {...autocomplete.getItemProps({ item, source })}
-                        >
-                          {source.sourceId === "navigation" && (
-                            <ItemWrapper item={item}>
-                              <div className="aa-ItemContent">
-                                <div className="aa-ItemContentBody">
-                                  <div className="aa-ItemContentTitle">
-                                    {item.fields.name["en-US"]}
-                                  </div>
-                                  {item.fields.category && (
-                                    <div className="aa-ItemContentSubtitle">
-                                      {item.fields.category["en-US"]}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="aa-ItemActions">
-                                <button
-                                  className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                  type="button"
-                                  title="Select"
-                                  style={{ pointerEvents: "none" }}
-                                >
-                                  <svg fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </ItemWrapper>
-                          )}
-                          {source.sourceId === "docs" && (
-                            <Link href="#">
-                              <a className="aa-ItemLink">
-                                <div className="aa-ItemContent">
-                                  <div className="aa-ItemContentBody">
-                                    <div className="aa-ItemContentTitle">
-                                      {item.title}
-                                    </div>
-                                    <div class="aa-ItemContentSubtitle">
-                                      {item.content_structure.lvl0} &gt;{" "}
-                                      {item.content_structure.lvl1}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="aa-ItemActions">
-                                  <button
-                                    className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
-                                    type="button"
-                                    title="Select"
-                                    style={{ pointerEvents: "none" }}
-                                  >
-                                    <svg
-                                      fill="currentColor"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path d="M18.984 6.984h2.016v6h-15.188l3.609 3.609-1.406 1.406-6-6 6-6 1.406 1.406-3.609 3.609h13.172v-4.031z" />
-                                    </svg>
-                                  </button>
-                                </div>
-                              </a>
-                            </Link>
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-              </section>
+              items.length > 0 && (
+                <section key={`source-${index}`} className="aa-Source">
+                  {Header && (
+                    <Header
+                      items={items}
+                      source={source}
+                      state={autocompleteState}
+                    />
+                  )}
+
+                  {items.length > 0 && (
+                    <ul className="aa-List" {...autocomplete.getListProps()}>
+                      {items.map((item) => {
+                        return (
+                          <li
+                            key={item.objectID}
+                            className="aa-Item"
+                            {...autocomplete.getItemProps({ item, source })}
+                          >
+                            <Item
+                              item={item}
+                              source={source}
+                              state={autocompleteState}
+                            />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </section>
+              )
             );
           })}
 
