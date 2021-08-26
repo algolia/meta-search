@@ -4,6 +4,7 @@ import { searchClient } from "../src/searchClient";
 import { toItemUrl } from "../utils/toItemUrl";
 import { MetaSearchPlugin } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
+import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 
 export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
   return {
@@ -22,8 +23,8 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
                     hitsPerPage: 5,
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
-                    facets: ["fields.type.en-US"],
-                    facetFilters: ["fields.type.en-US:view"],
+                    //facets: ["fields.type.en-US"],
+                    //facetFilters: ["fields.type.en-US:view"],
                   },
                 },
               ],
@@ -78,10 +79,25 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
             Preview({ item }) {
               return (
                 <div>
-                  <h1>Navigation</h1>
-                  <pre>
-                    <code>{JSON.stringify(item, null, 2)}</code>
-                  </pre>
+                  <h1 className="text-xl text-center pb-2">
+                    {item.fields.name["en-US"]}
+                  </h1>
+                  <div>
+                    {item.fields.params &&
+                      item.fields.params["en-US"] &&
+                      item.fields.params["en-US"].map((param) => {
+                        return (
+                          <div key={param}>
+                            <div className="pb-1 text-lg">{param}:</div>
+                            <pre className="pb-3">
+                              <code>
+                                {JSON.stringify(indexSettings[param], null, 2)}
+                              </code>
+                            </pre>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
               );
             },
