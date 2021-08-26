@@ -1,17 +1,17 @@
-import type { AppProps } from 'next/app'
+import type { AppProps } from "next/app";
 
-import { Autocomplete } from '../components/Autocomplete';
+import { MetaSearch } from "../components/MetaSearch";
 
-import '../styles/globals.css'
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <header>
-      <Autocomplete placeholder="Search" openOnFocus={true} debug={true} />
+        <MetaSearch placeholder="Search" openOnFocus={true} debug={true} />
       </header>
       <Component {...pageProps} />
     </>
-  )
+  );
 }
-export default MyApp
+export default MyApp;
