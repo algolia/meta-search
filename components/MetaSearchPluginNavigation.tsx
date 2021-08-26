@@ -2,12 +2,25 @@ import { getAlgoliaResults } from "@algolia/autocomplete-js";
 
 import { searchClient } from "../src/searchClient";
 import { toItemUrl } from "../utils/toItemUrl";
-import { MetaSearchPlugin } from "./types";
+import { MetaSearchPlugin, MetaSearchState } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
+import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
 
 function hasKeywords(query: string, keywords: string[]) {
   return keywords.some((keyword) => query.startsWith(`${keyword} `));
+}
+
+type SetScopeParams = {
+  scope: string;
+  state: MetaSearchState;
+  setContext: StateUpdater<AutocompleteContext>;
+};
+
+function setScope({ scope, state, setContext }: SetScopeParams) {
+  if (scope !== state.context.root) {
+    setContext({ root: scope });
+  }
 }
 
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
@@ -15,14 +28,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
 
   return {
     onStateChange({ state, setContext }) {
-      if (state.context.root === "view") {
+      if (state.query) {
         if (hasKeywords(state.query, keywords)) {
-          setContext({ root: "settings" });
+          setScope({ scope: "settings", state, setContext });
+        } else {
+          setScope({ scope: "", state, setContext });
         }
       } else {
-        if (!hasKeywords(state.query, keywords)) {
-          setContext({ root: "view" });
-        }
+        setScope({ scope: "view", state, setContext });
       }
     },
     getSources({ state, query, setQuery }) {
@@ -41,7 +54,9 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
                     facets: ["fields.type.en-US"],
-                    facetFilters: [`fields.type.en-US:${state.context.root}`],
+                    facetFilters: state.context.root
+                      ? [`fields.type.en-US:${state.context.root}`]
+                      : [],
                   },
                 },
               ],
@@ -55,12 +70,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
             return toItemUrl(item.fields.path["en-US"]);
           },
           onSelect({ item }) {
-            setQuery(`${item.fields.root["en-US"]} `);
+            if (item.fields.root) {
+              setQuery(`${item.fields.root["en-US"]} `);
+            }
           },
           components: {
             Header() {
               const header =
-                state.context.root === "view"
+                !state.context.root || state.context.root === "view"
                   ? "Navigation"
                   : ["Navigation", state.context.root].join(" > ");
 
