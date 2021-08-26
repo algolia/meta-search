@@ -7,7 +7,7 @@ import "../styles/globals.css";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <header>
+      <header className="border-b-2 border-indigo-500 p-2">
         <MetaSearch placeholder="Search" openOnFocus={true} debug={true} />
       </header>
       <Component {...pageProps} />

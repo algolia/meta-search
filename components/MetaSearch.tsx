@@ -75,38 +75,37 @@ export function MetaSearch() {
           .join(" ")}
         {...autocomplete.getPanelProps({})}
       >
-        <div className="aa-PanelLayout aa-Panel--scrollable">
-          {state.collections.map((collection, index) => {
-            const items = collection.items;
-            const source = collection.source as MetaSearchSource<any>;
-            const { Header, Item } = source.components;
-
-            return (
-              items.length > 0 && (
-                <section key={`source-${index}`} className="aa-Source">
-                  {Header && (
-                    <Header items={items} source={source} state={state} />
-                  )}
-
-                  <ul className="aa-List" {...autocomplete.getListProps()}>
-                    {items.map((item) => {
-                      return (
-                        <li
-                          key={item.objectID}
-                          className="aa-Item"
-                          {...autocomplete.getItemProps({ item, source })}
-                        >
-                          <Item item={item} source={source} state={state} />
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </section>
-              )
-            );
-          })}
-
-          <aside>
+        <div className="aa-PanelLayout flex">
+          <div className={`w-6/12 aa-Panel--scrollable`}>
+            {state.collections.map((collection, index) => {
+              const items = collection.items;
+              const source = collection.source as MetaSearchSource<any>;
+              const { Header, Item } = source.components;
+              return (
+                items.length > 0 && (
+                  <section key={`source-${index}`} className="aa-Source">
+                    {Header && (
+                      <Header items={items} source={source} state={state} />
+                    )}
+                    <ul className="aa-List" {...autocomplete.getListProps()}>
+                      {items.map((item) => {
+                        return (
+                          <li
+                            key={item.objectID}
+                            className="aa-Item"
+                            {...autocomplete.getItemProps({ item, source })}
+                          >
+                            <Item item={item} source={source} state={state} />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                )
+              );
+            })}
+          </div>
+          <aside className="border-l-2 border-gray-300 w-6/12 p-4">
             <MetaSearchPanelSwitch state={state} fallback={null} />
           </aside>
         </div>
