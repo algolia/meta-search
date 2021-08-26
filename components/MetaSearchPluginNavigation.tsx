@@ -6,9 +6,26 @@ import { MetaSearchPlugin } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 
+function hasKeywords(query: string, keywords: string[]) {
+  return keywords.some((keyword) => query.startsWith(`${keyword} `));
+}
+
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
+  const keywords = ["settings", "configuration"];
+
   return {
-    getSources({ state, query, setContext, setQuery }) {
+    onStateChange({ state, setContext }) {
+      if (state.context.root === "view") {
+        if (hasKeywords(state.query, keywords)) {
+          setContext({ root: "settings" });
+        }
+      } else {
+        if (!hasKeywords(state.query, keywords)) {
+          setContext({ root: "view" });
+        }
+      }
+    },
+    getSources({ state, query, setQuery }) {
       return [
         {
           sourceId: "navigation",
@@ -38,18 +55,18 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
             return toItemUrl(item.fields.path["en-US"]);
           },
           onSelect({ item }) {
-            if (item.fields.root?.["en-US"]) {
-              setContext({ root: item.fields.root["en-US"] });
-              setQuery(`${item.fields.root["en-US"]} `);
-            }
+            setQuery(`${item.fields.root["en-US"]} `);
           },
           components: {
             Header() {
+              const header =
+                state.context.root === "view"
+                  ? "Navigation"
+                  : ["Navigation", state.context.root].join(" > ");
+
               return (
                 <div>
-                  <span className="aa-SourceHeaderTitle">
-                    Navigation ({state.context.root})
-                  </span>
+                  <span className="aa-SourceHeaderTitle">{header}</span>
                   <div className="aa-SourceHeaderLine"></div>
                 </div>
               );

@@ -6,10 +6,11 @@ import { MetaSearchPlugin } from "./types";
 
 export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
   return {
-    getSources({ query }) {
-      if (!query) {
+    getSources({ query, state }) {
+      if (!query || state.context.root !== "view") {
         return [];
       }
+
       return [
         {
           sourceId: "docs",
@@ -29,6 +30,14 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
             });
           },
           components: {
+            Header() {
+              return (
+                <div>
+                  <span className="aa-SourceHeaderTitle">Documentations</span>
+                  <div className="aa-SourceHeaderLine"></div>
+                </div>
+              );
+            },
             Item({ item }) {
               return (
                 <Link href="#">
@@ -56,14 +65,6 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
                     </div>
                   </a>
                 </Link>
-              );
-            },
-            Header() {
-              return (
-                <div>
-                  <span className="aa-SourceHeaderTitle">Documentations</span>
-                  <div className="aa-SourceHeaderLine"></div>
-                </div>
               );
             },
             Preview({ item }) {
