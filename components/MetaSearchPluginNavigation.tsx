@@ -63,7 +63,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                         {item.fields.name["en-US"]}
                       </div>
                       {item.fields.category && (
-                        <div className="aa-ItemContentSubtitle">
+                        <div className="aa-ItemContentSubtitle text-gray-500">
                           {item.fields.category["en-US"]}
                         </div>
                       )}
