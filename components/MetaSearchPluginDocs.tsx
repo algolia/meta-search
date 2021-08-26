@@ -2,8 +2,9 @@ import { getAlgoliaResults } from "@algolia/autocomplete-js";
 import Link from "next/link";
 
 import { searchClientDocs } from "../src/searchClientDocs";
+import { MetaSearchPlugin } from "./types";
 
-export function createDocsPlugin() {
+export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
   return {
     getSources({ query }) {
       if (!query) {

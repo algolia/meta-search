@@ -12,9 +12,9 @@ export function MetaSearchItemWrapper({
   item,
   children,
 }: MetaSearchItemWrapperParams) {
-  if (item.fields.route) {
+  if (item.fields.path) {
     return (
-      <Link href={toItemUrl(item.fields.route["en-US"])}>
+      <Link href={toItemUrl(item.fields.path["en-US"])}>
         <a className="aa-ItemLink">{children}</a>
       </Link>
     );

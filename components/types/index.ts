@@ -45,6 +45,4 @@ export type MetaSearchState = AutocompleteState<any> & {
   context: MetaSearchContext;
 };
 
-export type MetaSearchItem = BaseItem & {
-  fields: Record<string, any>;
-};
+export * from "./MetaSearchItem";

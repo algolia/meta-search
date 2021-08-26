@@ -6,13 +6,13 @@ import { MetaSearchPlugin } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 
-export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
+export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
-    getSources() {
+    getSources({ state, query, setContext, setQuery }) {
       return [
         {
           sourceId: "navigation",
-          getItems({ query }) {
+          getItems() {
             return getAlgoliaResults({
               searchClient,
               queries: [
@@ -23,21 +23,37 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
                     hitsPerPage: 5,
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
-                    //facets: ["fields.type.en-US"],
-                    //facetFilters: ["fields.type.en-US:view"],
+                    facets: ["fields.type.en-US"],
+                    facetFilters: [`fields.type.en-US:${state.context.root}`],
                   },
                 },
               ],
             });
           },
           getItemUrl({ item }) {
-            if (!item.fields.route) {
+            if (!item.fields.path) {
               return undefined;
             }
 
-            return toItemUrl(item.fields.route["en-US"]);
+            return toItemUrl(item.fields.path["en-US"]);
+          },
+          onSelect({ item }) {
+            if (item.fields.root?.["en-US"]) {
+              setContext({ root: item.fields.root["en-US"] });
+              setQuery(`${item.fields.root["en-US"]} `);
+            }
           },
           components: {
+            Header() {
+              return (
+                <div>
+                  <span className="aa-SourceHeaderTitle">
+                    Navigation ({state.context.root})
+                  </span>
+                  <div className="aa-SourceHeaderLine"></div>
+                </div>
+              );
+            },
             Item({ item }) {
               return (
                 <MetaSearchItemWrapper item={item}>
@@ -66,14 +82,6 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, any> {
                     </button>
                   </div>
                 </MetaSearchItemWrapper>
-              );
-            },
-            Header() {
-              return (
-                <div>
-                  <span className="aa-SourceHeaderTitle">Navigation</span>
-                  <div className="aa-SourceHeaderLine"></div>
-                </div>
               );
             },
             Preview({ item }) {

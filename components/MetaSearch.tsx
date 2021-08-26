@@ -14,6 +14,7 @@ import { useCloseVirtualKeyboardOnTouchMove } from "../hooks/useCloseVirtualKeyb
 
 import { useAutocomplete } from "../hooks";
 import { useMemo } from "react";
+import { useEffect } from "react";
 
 export function MetaSearch() {
   const plugins = useMemo(
@@ -29,12 +30,37 @@ export function MetaSearch() {
     openOnFocus: true,
     defaultActiveItemId: 0,
     plugins,
+    initialState: {
+      context: {
+        root: "view",
+      },
+    },
   });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   useCloseVirtualKeyboardOnTouchMove({ inputRef });
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape" && state.context.root !== "view") {
+        event.preventDefault();
+        event.stopPropagation();
+
+        autocomplete.setContext({
+          root: "view",
+        });
+        autocomplete.refresh();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   return (
     <div className="aa-Autocomplete" {...autocomplete.getRootProps({})}>
