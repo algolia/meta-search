@@ -6,8 +6,8 @@ import { MetaSearchPlugin } from "./types";
 
 export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
   return {
-    getSources({ query, state }) {
-      if (!query || state.context.root !== "view") {
+    getSources({ query }) {
+      if (!query) {
         return [];
       }
 
@@ -33,7 +33,7 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
             Header() {
               return (
                 <div>
-                  <span className="aa-SourceHeaderTitle">Documentations</span>
+                  <span className="aa-SourceHeaderTitle">Documentation</span>
                   <div className="aa-SourceHeaderLine"></div>
                 </div>
               );
