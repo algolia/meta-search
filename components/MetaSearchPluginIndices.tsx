@@ -27,11 +27,11 @@ export function createIndicesPlugin(): MetaSearchPlugin<
 > {
   return {
     getSources({ query: rawQuery, state }) {
-      if (state.context.root !== "indices") {
+      if (state.context.root !== "index") {
         return [];
       }
 
-      const query = rawQuery.replace("indices ", "");
+      const query = rawQuery.replace("index ", "");
 
       return [
         {

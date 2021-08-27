@@ -32,12 +32,12 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
         } else if (hasKeywords(state.query, ["applications", "apps", "app"])) {
           setScope({ scope: "apps", state, setContext });
         } else if (hasKeywords(state.query, ["index", "indexes", "indices"])) {
-          setScope({ scope: "indices", state, setContext });
+          setScope({ scope: "index", state, setContext });
         } else {
           setScope({ scope: "", state, setContext });
         }
       } else {
-        setScope({ scope: "view", state, setContext });
+        setScope({ scope: "scope", state, setContext });
       }
     },
     getSources({ state, query, setQuery }) {
@@ -78,16 +78,12 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
           onSelect({ item }) {
             if (item.fields.root) {
               setQuery(`${item.fields.root["en-US"]} `);
-            } else if (item.fields.keywords["en-US"].includes("apps")) {
-              setQuery("apps ");
-            } else if (item.fields.keywords["en-US"].includes("index")) {
-              setQuery("indices ");
             }
           },
           components: {
             Header() {
               const header =
-                !state.context.root || state.context.root === "view"
+                !state.context.root || state.context.root === "scope"
                   ? "Navigation"
                   : ["Navigation", state.context.root].join(" > ");
 

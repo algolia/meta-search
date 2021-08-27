@@ -36,7 +36,7 @@ export function MetaSearch() {
     plugins,
     initialState: {
       context: {
-        root: "view",
+        root: "scope",
       },
     },
     reshape({ sourcesBySourceId, state }) {
@@ -45,7 +45,7 @@ export function MetaSearch() {
       switch (state.context.root) {
         case "apps":
           return [apps];
-        case "indices":
+        case "index":
           return [indices];
         default:
           return Object.values(rest);
@@ -60,13 +60,11 @@ export function MetaSearch() {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape" && state.context.root !== "view") {
+      if (event.key === "Escape" && state.context.root !== "scope") {
         event.preventDefault();
         event.stopPropagation();
 
-        autocomplete.setContext({
-          root: "view",
-        });
+        autocomplete.setContext({ root: "scope" });
         autocomplete.refresh();
       }
     }
