@@ -44,7 +44,7 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
                     <div className="aa-ItemContent">
                       <div className="aa-ItemContentBody">
                         <div className="aa-ItemContentTitle">{item.title}</div>
-                        <div className="aa-ItemContentSubtitle">
+                        <div className="aa-ItemContentSubtitle text-gray-500">
                           {item.content_structure.lvl0} &gt;{" "}
                           {item.content_structure.lvl1}
                         </div>
