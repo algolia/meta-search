@@ -11,15 +11,15 @@ function hasKeywords(query: string, keywords: string[]) {
   return keywords.some((keyword) => query.startsWith(`${keyword} `));
 }
 
-type SetScopeParams = {
-  scope: string;
+type SetRootParams = {
+  root: string;
   state: MetaSearchState;
   setContext: StateUpdater<AutocompleteContext>;
 };
 
-function setScope({ scope, state, setContext }: SetScopeParams) {
-  if (scope !== state.context.root) {
-    setContext({ root: scope });
+function setRoot({ root, state, setContext }: SetRootParams) {
+  if (root !== state.context.root) {
+    setContext({ root });
   }
 }
 
@@ -28,16 +28,16 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
     onStateChange({ state, setContext }) {
       if (state.query) {
         if (hasKeywords(state.query, ["settings", "configuration"])) {
-          setScope({ scope: "settings", state, setContext });
+          setRoot({ root: "settings", state, setContext });
         } else if (hasKeywords(state.query, ["applications", "apps", "app"])) {
-          setScope({ scope: "apps", state, setContext });
+          setRoot({ root: "apps", state, setContext });
         } else if (hasKeywords(state.query, ["index", "indexes", "indices"])) {
-          setScope({ scope: "index", state, setContext });
+          setRoot({ root: "index", state, setContext });
         } else {
-          setScope({ scope: "", state, setContext });
+          setRoot({ root: "", state, setContext });
         }
       } else {
-        setScope({ scope: "scope", state, setContext });
+        setRoot({ root: "scope", state, setContext });
       }
     },
     getSources({ state, query, setQuery }) {
