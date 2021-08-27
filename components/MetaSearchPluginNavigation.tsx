@@ -61,7 +61,13 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                     highlightPostTag: "</mark>",
                     facets: ["fields.type.en-US"],
                     facetFilters: state.context.root
-                      ? [`fields.type.en-US:${state.context.root}`]
+                      ? [
+                          [
+                            `fields.type.en-US:${state.context.root}`,
+                            state.context.root === "scope" &&
+                              "fields.type.en-US:shortcut",
+                          ].filter(Boolean),
+                        ]
                       : [],
                   },
                 },
