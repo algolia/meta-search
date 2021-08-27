@@ -1,38 +1,49 @@
-import { getAlgoliaResults } from "@algolia/autocomplete-js";
 import Link from "next/link";
 
-import { searchClientDocs } from "../src/searchClientDocs";
-import { MetaSearchPlugin } from "./types";
+import { MetaSearchAppItem, MetaSearchPlugin } from "./types";
 
-export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
+import apps from "../data/apps.json";
+
+function mapWithObjectId<TItem extends MetaSearchAppItem>(items: TItem[]) {
+  return items.map((item) => ({ objectID: item.application_id, ...item }));
+}
+
+function search<TItem extends MetaSearchAppItem>(
+  query: string,
+  items: TItem[]
+) {
+  if (!query) {
+    return items;
+  }
+
+  return items.filter((item) =>
+    item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+  );
+}
+
+export function createApplicationsPlugin(): MetaSearchPlugin<
+  MetaSearchAppItem,
+  undefined
+> {
   return {
-    getSources({ query }) {
-      if (!query) {
+    getSources({ query: rawQuery, state }) {
+      if (state.context.root !== "apps") {
         return [];
       }
 
+      const query = rawQuery.replace("apps ", "");
+
       return [
         {
-          sourceId: "docs",
+          sourceId: "apps",
           getItems() {
-            return getAlgoliaResults({
-              searchClient: searchClientDocs,
-              queries: [
-                {
-                  indexName: "documentation_production",
-                  query,
-                  params: {
-                    hitsPerPage: 5,
-                  },
-                },
-              ],
-            });
+            return search(query, mapWithObjectId(apps));
           },
           components: {
             Header() {
               return (
                 <div>
-                  <span className="aa-SourceHeaderTitle">Documentation</span>
+                  <span className="aa-SourceHeaderTitle">Applications</span>
                   <div className="aa-SourceHeaderLine"></div>
                 </div>
               );
@@ -43,10 +54,9 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
                   <a className="aa-ItemLink">
                     <div className="aa-ItemContent">
                       <div className="aa-ItemContentBody">
-                        <div className="aa-ItemContentTitle">{item.title}</div>
+                        <div className="aa-ItemContentTitle">{item.name}</div>
                         <div className="aa-ItemContentSubtitle">
-                          {item.content_structure.lvl0} &gt;{" "}
-                          {item.content_structure.lvl1}
+                          {item.application_id}
                         </div>
                       </div>
                     </div>
@@ -69,7 +79,7 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
             Preview({ item }) {
               return (
                 <div>
-                  <h1>Docs</h1>
+                  <h1>Application</h1>
                   <pre>
                     <code>{JSON.stringify(item, null, 2)}</code>
                   </pre>

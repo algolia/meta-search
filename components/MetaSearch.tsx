@@ -8,8 +8,10 @@ import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
 import "@algolia/autocomplete-theme-classic";
 
 import { createNavigationPlugin } from "./MetaSearchPluginNavigation";
-import { MetaSearchSource } from "./types";
 import { createDocsPlugin } from "./MetaSearchPluginDocs";
+import { createApplicationsPlugin } from "./MetaSearchPluginApplications";
+import { createIndicesPlugin } from "./MetaSearchPluginIndices";
+import { MetaSearchSource } from "./types";
 import { useCloseVirtualKeyboardOnTouchMove } from "../hooks/useCloseVirtualKeyboardOnTouchMove";
 
 import { useAutocomplete } from "../hooks";
@@ -21,6 +23,8 @@ export function MetaSearch() {
     () => [
       createListenerPlugin({}),
       createNavigationPlugin(),
+      createApplicationsPlugin(),
+      createIndicesPlugin(),
       createDocsPlugin(),
     ],
     []
@@ -34,6 +38,18 @@ export function MetaSearch() {
       context: {
         root: "view",
       },
+    },
+    reshape({ sourcesBySourceId, state }) {
+      const { apps, indices, ...rest } = sourcesBySourceId;
+
+      switch (state.context.root) {
+        case "apps":
+          return [apps];
+        case "indices":
+          return [indices];
+        default:
+          return Object.values(rest);
+      }
     },
   });
   const inputRef = React.useRef<HTMLInputElement>(null);

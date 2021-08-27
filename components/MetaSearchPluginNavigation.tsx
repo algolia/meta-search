@@ -24,13 +24,15 @@ function setScope({ scope, state, setContext }: SetScopeParams) {
 }
 
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
-  const keywords = ["settings", "configuration"];
-
   return {
     onStateChange({ state, setContext }) {
       if (state.query) {
-        if (hasKeywords(state.query, keywords)) {
+        if (hasKeywords(state.query, ["settings", "configuration"])) {
           setScope({ scope: "settings", state, setContext });
+        } else if (hasKeywords(state.query, ["applications", "apps", "app"])) {
+          setScope({ scope: "apps", state, setContext });
+        } else if (hasKeywords(state.query, ["index", "indexes", "indices"])) {
+          setScope({ scope: "indices", state, setContext });
         } else {
           setScope({ scope: "", state, setContext });
         }
@@ -39,6 +41,10 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
       }
     },
     getSources({ state, query, setQuery }) {
+      if (state.context.root === "apps" || state.context.root === "indices") {
+        return [];
+      }
+
       return [
         {
           sourceId: "navigation",
@@ -72,6 +78,10 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
           onSelect({ item }) {
             if (item.fields.root) {
               setQuery(`${item.fields.root["en-US"]} `);
+            } else if (item.fields.keywords["en-US"].includes("apps")) {
+              setQuery("apps ");
+            } else if (item.fields.keywords["en-US"].includes("index")) {
+              setQuery("indices ");
             }
           },
           components: {

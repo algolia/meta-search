@@ -46,3 +46,6 @@ export type MetaSearchState = AutocompleteState<any> & {
 };
 
 export * from "./MetaSearchItem";
+export * from "./MetaSearchAppItem";
+export * from "./MetaSearchAppDetailsItem";
+export * from "./MetaSearchIndexItem";
