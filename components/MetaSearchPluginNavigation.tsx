@@ -27,12 +27,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
     onStateChange({ state, setContext }) {
       if (state.query) {
-        if (hasKeywords(state.query, ["settings", "configuration"])) {
-          setRoot({ root: "settings", state, setContext });
+        if (hasKeywords(state.query, ["configure", "configuration"])) {
+          setRoot({ root: "configure", state, setContext });
         } else if (hasKeywords(state.query, ["applications", "apps", "app"])) {
           setRoot({ root: "apps", state, setContext });
         } else if (hasKeywords(state.query, ["index", "indexes", "indices"])) {
           setRoot({ root: "index", state, setContext });
+        } else if (hasKeywords(state.query, ["monitoring"])) {
+          setRoot({ root: "monitoring", state, setContext });
         } else {
           setRoot({ root: "", state, setContext });
         }
@@ -56,7 +58,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                   indexName: "dev_meta",
                   query,
                   params: {
-                    hitsPerPage: 5,
+                    hitsPerPage: 8,
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
                     facets: ["fields.type.en-US"],
