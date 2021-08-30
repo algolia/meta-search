@@ -6,6 +6,7 @@ import { MetaSearchPlugin, MetaSearchState } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
+import * as Icon from "react-feather";
 
 function hasKeywords(query: string, keywords: string[]) {
   return keywords.some((keyword) => query.startsWith(`${keyword} `));
@@ -103,9 +104,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
               );
             },
             Item({ item }) {
+              const IconFeatherName = item.fields.icon && item.fields.icon['en-US'] || "Link"
+              const IconItem = Icon[IconFeatherName];
               return (
                 <MetaSearchItemWrapper item={item}>
                   <div className="aa-ItemContent">
+                    <div className="aa-ItemIcon aa-ItemIcon--alignTop">
+                      <IconItem />
+                    </div>
                     <div className="aa-ItemContentBody">
                       <div className="aa-ItemContentTitle">
                         {item.fields.name["en-US"]}
