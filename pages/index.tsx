@@ -1,5 +1,5 @@
 export default function Home() {
   return (
-    <h1>Algolia</h1>
+    <div className="p-8 text-xl">Overview</div>
   )
 }
