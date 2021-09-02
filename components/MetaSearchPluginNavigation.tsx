@@ -157,7 +157,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                     />
                   </div>
                   <div className="text-center text-xs text-gray-500 pt-4">
-                    {item.fields.category["en-US"]}
+                    {item.fields.category && item.fields.category["en-US"]}
                   </div>
                   <h1 className="text-xl text-center pb-4">
                     {item.fields.name["en-US"]}
