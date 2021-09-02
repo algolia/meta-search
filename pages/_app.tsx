@@ -72,7 +72,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </div>
 
             <div className="flex-grow px-20">
-              <MetaSearch isOpen={isSearchOpen} />
+              <MetaSearch
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
+              />
             </div>
 
             <div className="flex space-x-6 items-center">

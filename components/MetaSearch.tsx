@@ -20,9 +20,10 @@ import { useEffect } from "react";
 
 type MetaSearchProps = {
   isOpen: boolean;
+  onClose: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
-export function MetaSearch({ isOpen }: MetaSearchProps) {
+export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
   const plugins = useMemo(
     () => [
       createListenerPlugin({}),
@@ -86,7 +87,10 @@ export function MetaSearch({ isOpen }: MetaSearchProps) {
 
   return (
     <div>
-      <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-40"></div>
+      <div
+        className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-40"
+        onClick={onClose}
+      />
       <div className="absolute top-40 left-80 right-80">
         <div
           className="aa-Autocomplete aa-Panel"
