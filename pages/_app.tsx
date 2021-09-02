@@ -4,6 +4,8 @@ import * as Icon from "react-feather";
 
 import { MetaSearch } from "../components/MetaSearch";
 
+import "@algolia/autocomplete-theme-classic";
+import "tailwindcss/tailwind.css";
 import "../styles/globals.css";
 
 export default function MyApp({ Component, pageProps }: AppProps) {

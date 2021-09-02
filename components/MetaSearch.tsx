@@ -5,7 +5,6 @@ import { SearchIcon } from "./SearchIcon";
 import { createListenerPlugin } from "./MetaSearchPluginListener";
 
 import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
-import "@algolia/autocomplete-theme-classic";
 
 import { createNavigationPlugin } from "./MetaSearchPluginNavigation";
 import { createDocsPlugin } from "./MetaSearchPluginDocs";
@@ -93,7 +92,7 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
       />
       <div className="absolute top-40 left-80 right-80">
         <div
-          className="aa-Autocomplete aa-Panel"
+          className="aa-Autocomplete aa-Panel w-full"
           {...autocomplete.getRootProps({})}
         >
           <div className="p-2">
