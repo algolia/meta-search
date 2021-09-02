@@ -95,7 +95,7 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
           className="aa-Autocomplete aa-Panel w-full"
           {...autocomplete.getRootProps({})}
         >
-          <div className="p-2">
+          <div className="flex items-center p-2 space-x-4">
             <form
               ref={formRef}
               className="aa-Form px-2"
@@ -127,6 +127,9 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
                 </button>
               </div>
             </form>
+            <div>
+              <button className="py-2 px-4 bg-gray-500">Close</button>
+            </div>
           </div>
           <div
             ref={panelRef}
