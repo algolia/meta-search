@@ -19,7 +19,7 @@ import { useEffect } from "react";
 
 type MetaSearchProps = {
   isOpen: boolean;
-  onClose: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onClose(): void;
 };
 
 export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
