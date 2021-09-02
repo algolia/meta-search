@@ -6,6 +6,7 @@ import { MetaSearchPlugin, MetaSearchState } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 import apps from "../data/apps.json";
+import indexTop from "../data/T2ZX9HO66V__index_top.json";
 import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
 import * as Icon from "react-feather";
 
@@ -188,15 +189,55 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                     item.fields.root["en-US"] == "apps" &&
                     apps.map((app) => {
                       return (
-                        <div className="w-full p-2 bg-white shadow mb-1" key={app.application_id}>
-                          <div className="pb-1 font-semibold">{app.name}</div>
-                          <div className="text-gray-500 text-sm">
-                            {app.application_id}
+                        <div
+                          className="flex w-full p-2 bg-white shadow mb-1"
+                          key={app.application_id}
+                        >
+                          <div
+                            className="flex flex-shrink-0 items-center m-auto bg-green-300 rounded-md"
+                            style={{ width: 40, height: 40 }}
+                          >
+                            <div className="w-full text-center">{app.application_id.slice(0,2)}</div>
+                          </div>
+                          <div className="flex-grow pl-2">
+                            <div className="pb-1 font-semibold">{app.name}</div>
+                            <div className="text-gray-500 text-sm">
+                              {app.application_id}
+                            </div>
                           </div>
                         </div>
                       );
                     })}
-                  <div></div>
+                  {item.fields.type &&
+                    item.fields.type["en-US"] == "scope" &&
+                    item.fields.root &&
+                    item.fields.root["en-US"] == "index" &&
+                    indexTop.items.map((index) => {
+                      return (
+                        <div
+                          className="flex w-full p-2 bg-white shadow mb-1"
+                          key={index.name}
+                        >
+                          <div
+                            className="flex flex-shrink-0 items-center m-auto bg-gray-200 text-gray-700 rounded-full"
+                            style={{ width: 40, height: 40 }}
+                          >
+                            <Icon.Server
+                              className="m-auto"
+                              style={{ width: 18, height: 18 }}
+                            />
+                          </div>
+                          <div className="flex-grow pl-2">
+                            <div className="pb-1 font-semibold">
+                              {index.name}
+                            </div>
+                            <div className="text-gray-500 text-sm">
+                              {index.entries} records
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
               );
             },
