@@ -108,7 +108,7 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
       />
       <div className="absolute top-40 left-80 right-80">
         <div
-          className="aa-Autocomplete w-full bg-white rounded"
+          className="aa-Autocomplete w-full bg-white rounded overflow-hidden"
           {...autocomplete.getRootProps({})}
         >
           <div className="flex items-stretch p-2 space-x-6">
