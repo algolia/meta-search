@@ -1,11 +1,14 @@
 import type { AppProps } from "next/app";
+import { useState } from "react";
 import * as Icon from "react-feather";
 
 import { MetaSearch } from "../components/MetaSearch";
 
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   return (
     <>
       <div className="flex h-screen">
@@ -69,38 +72,43 @@ function MyApp({ Component, pageProps }: AppProps) {
             </div>
 
             <div className="flex-grow px-20">
-              <MetaSearch
-                placeholder="Search"
-                openOnFocus={true}
-                debug={true}
-              />
+              <MetaSearch isOpen={isSearchOpen} />
             </div>
 
-            <div className="flex"></div>
-            <div className="pr-6">
-              <Icon.Bell className="text-gray-600" style={{ width: "18px" }} />
-            </div>
-            <div className="pr-6">
-              <Icon.HelpCircle
-                className="text-gray-600"
-                style={{ width: "18px" }}
-              />
-            </div>
-            <div className="pr-6">
-              <Icon.Smile className="text-gray-600" style={{ width: "18px" }} />
-            </div>
-
-            <div
-              className="bg-green-400 flex items-center text-center rounded-full"
-              style={{ width: "36px", height: "36px" }}
-            >
-              <div className="w-full">ME</div>
-            </div>
-            <div className="pr-6">
-              <Icon.ChevronDown
-                className="text-gray-600"
-                style={{ width: "24px" }}
-              />
+            <div className="flex space-x-6 items-center">
+              <div className="rounded-full shadow group">
+                <SearchButton onClick={() => setIsSearchOpen(true)} />
+              </div>
+              <div>
+                <Icon.Bell
+                  className="text-gray-600"
+                  style={{ width: "18px" }}
+                />
+              </div>
+              <div>
+                <Icon.HelpCircle
+                  className="text-gray-600"
+                  style={{ width: "18px" }}
+                />
+              </div>
+              <div>
+                <Icon.Smile
+                  className="text-gray-600"
+                  style={{ width: "18px" }}
+                />
+              </div>
+              <div className="flex space-x-2 items-center">
+                <div
+                  className="bg-green-400 flex items-center text-center rounded-full"
+                  style={{ width: "36px", height: "36px" }}
+                >
+                  <div className="w-full">ME</div>
+                </div>
+                <Icon.ChevronDown
+                  className="text-gray-600"
+                  style={{ width: "24px" }}
+                />
+              </div>
             </div>
           </header>
           <Component {...pageProps} />
@@ -109,4 +117,36 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
-export default MyApp;
+
+type SearchButtonProps = {
+  onClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
+};
+
+function SearchButton({ onClick }: SearchButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center space-x-3 rounded-full shadow-lg hover:shadow-xl transition-shadow ease-in-out duration-100 py-3 px-6 bg-gradient-to-b text-gray-600 from-white via-white to-gray-200"
+    >
+      <svg
+        className="h-5 w-5 text-blue-800"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <span>Search for documentation, pages, ...</span>
+      <div className="shadow-lg rounded">
+        <div className="rounded border-b-2 border-gray-200 shadow text-xs text-gray-400 bg-gradient-to-b to-white from-gray-50">
+          <div className="p-1.5 rounded border-2 border-white">⌘K</div>
+        </div>
+      </div>
+    </button>
+  );
+}

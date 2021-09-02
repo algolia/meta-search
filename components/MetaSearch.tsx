@@ -18,7 +18,11 @@ import { useAutocomplete } from "../hooks";
 import { useMemo } from "react";
 import { useEffect } from "react";
 
-export function MetaSearch() {
+type MetaSearchProps = {
+  isOpen: boolean;
+};
+
+export function MetaSearch({ isOpen }: MetaSearchProps) {
   const plugins = useMemo(
     () => [
       createListenerPlugin({}),
@@ -75,6 +79,10 @@ export function MetaSearch() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, []);
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div>
