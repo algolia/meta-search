@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect } from "react";
+import { createTagsPlugin } from "@algolia/autocomplete-plugin-tags";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
@@ -28,6 +29,11 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
       createApplicationsPlugin(),
       createIndicesPlugin(),
       createDocsPlugin(),
+      createTagsPlugin({
+        transformSource() {
+          return undefined;
+        },
+      }),
     ],
     []
   );
@@ -102,13 +108,13 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
       />
       <div className="absolute top-40 left-80 right-80">
         <div
-          className="aa-Autocomplete aa-Panel w-full"
+          className="aa-Autocomplete w-full bg-white rounded"
           {...autocomplete.getRootProps({})}
         >
           <div className="flex items-stretch p-2 space-x-6">
             <form
               ref={formRef}
-              className="aa-Form px-2"
+              className="aa-Form"
               {...autocomplete.getFormProps({ inputElement: inputRef.current })}
             >
               <div className="aa-InputWrapperPrefix">
@@ -118,9 +124,23 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
                     type="submit"
                     title="Submit"
                   >
-                    <SearchIcon />
+                    <SearchIcon className="aa-SubmitIcon mx-auto" />
                   </button>
                 </label>
+                {state.context.tagsPlugin.tags.length > 0 && (
+                  <div className="mr-2">
+                    <ul className="list-none flex items-center space-x-1">
+                      {state.context.tagsPlugin.tags.map((tag) => (
+                        <li
+                          key={tag.label}
+                          className="block py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
+                        >
+                          {tag.label}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div className="aa-InputWrapper">
                 <input
@@ -134,7 +154,7 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
               </div>
               <div className="aa-InputWrapperSuffix">
                 <button className="aa-ClearButton" title="Clear" type="reset">
-                  <ClearIcon />
+                  <ClearIcon className="aa-ClearIcon" />
                 </button>
               </div>
             </form>
