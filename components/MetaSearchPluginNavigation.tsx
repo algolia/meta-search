@@ -162,7 +162,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                   <h1 className="text-xl text-center pb-4">
                     {item.fields.name["en-US"]}
                   </h1>
-                  <div className="m-auto w-10/12 text-sm text-gray-600">
+                  <div className="m-auto w-10/12 text-sm text-gray-600 mb-4">
                     {item.fields.description &&
                       item.fields.description["en-US"].content[0].content[0]
                         .value}
@@ -172,13 +172,14 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                       item.fields.params["en-US"] &&
                       item.fields.params["en-US"].map((param) => {
                         return (
-                          <div key={param}>
-                            <div className="pb-1 text-lg">{param}:</div>
-                            <pre className="pb-3">
-                              <code>
+                          <div className="flex py-4 border-b border-gray-300 text-gray-800 text-sm items-center" key={param}>
+                            <code className="flex-shrink-0 bg-gray-200 border-gray-300 border px-1 pt-0.5 rounded-lg text-xs font-semibold">{param}</code>
+                            <div className=" text-gray-500 text-right flex-grow flex-nowrap">
+                              Current Value:{" "}
+                              <code className=" text-gray-800">
                                 {JSON.stringify(indexSettings[param], null, 2)}
                               </code>
-                            </pre>
+                            </div>
                           </div>
                         );
                       })}
@@ -202,7 +203,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                             </div>
                           </div>
                           <div className="flex-grow pl-2">
-                            <div className="pb-1 font-semibold">{app.name}</div>
+                            <div className="pb-1">{app.name}</div>
                             <div className="text-gray-500 text-sm">
                               {app.application_id}
                             </div>
@@ -230,7 +231,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                             />
                           </div>
                           <div className="flex-grow pl-2">
-                            <div className="pb-1 font-semibold">
+                            <div className="pb-1">
                               {index.name}
                             </div>
                             <div className="text-gray-500 text-sm">
@@ -257,7 +258,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                           key={keyName}
                         >
                           <div className="flex-grow pl-2">
-                            <div className="pb-1 font-semibold">{keyName}</div>
+                            <div className="pb-1">{keyName}</div>
                           </div>
                           <Icon.Copy
                               className="m-auto text-gray-500"
