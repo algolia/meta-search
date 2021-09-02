@@ -119,6 +119,7 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
                   {...autocomplete.getInputProps({
                     inputElement: inputRef.current,
                   })}
+                  autoFocus={true}
                 />
               </div>
               <div className="aa-InputWrapperSuffix">
