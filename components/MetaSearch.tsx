@@ -161,7 +161,7 @@ export function MetaSearch() {
                   );
                 })}
               </div>
-              <aside className="border-l-2 border-gray-300 w-6/12 p-4">
+              <aside className="bg-gray-100 w-6/12 p-4">
                 <MetaSearchPanelSwitch state={state} fallback={null} />
               </aside>
             </div>

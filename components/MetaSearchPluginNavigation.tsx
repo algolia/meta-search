@@ -139,11 +139,20 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
               );
             },
             Preview({ item }) {
+              const IconFeatherName = item.fields.icon && item.fields.icon['en-US'] || "Link"
+              const IconItem = Icon[IconFeatherName];
               return (
                 <div>
-                  <h1 className="text-xl text-center pb-2">
+                  <div className="flex items-center m-auto bg-gray-200 text-gray-700 rounded-full"  style={{width:40,height:40}}>
+                  <IconItem className="m-auto" style={{width:18,height:18}} />
+                  </div>
+                  <div className="text-center text-xs text-gray-500 pt-4">
+                  {item.fields.category["en-US"]}
+                  </div>
+                  <h1 className="text-xl text-center pb-4">
                     {item.fields.name["en-US"]}
                   </h1>
+                  <div className="m-auto w-10/12 text-sm text-gray-600">{item.fields.description && item.fields.description["en-US"].content[0].content[0].value}</div>
                   <div>
                     {item.fields.params &&
                       item.fields.params["en-US"] &&
