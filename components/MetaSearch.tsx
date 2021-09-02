@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useEffect } from "react";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
@@ -14,8 +14,6 @@ import { MetaSearchSource } from "./types";
 import { useCloseVirtualKeyboardOnTouchMove } from "../hooks/useCloseVirtualKeyboardOnTouchMove";
 
 import { useAutocomplete } from "../hooks";
-import { useMemo } from "react";
-import { useEffect } from "react";
 
 type MetaSearchProps = {
   isOpen: boolean;
