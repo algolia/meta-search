@@ -197,7 +197,9 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                             className="flex flex-shrink-0 items-center m-auto bg-green-300 rounded-md"
                             style={{ width: 40, height: 40 }}
                           >
-                            <div className="w-full text-center">{app.application_id.slice(0,2)}</div>
+                            <div className="w-full text-center">
+                              {app.application_id.slice(0, 2)}
+                            </div>
                           </div>
                           <div className="flex-grow pl-2">
                             <div className="pb-1 font-semibold">{app.name}</div>
@@ -235,6 +237,32 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                               {index.entries} records
                             </div>
                           </div>
+                        </div>
+                      );
+                    })}
+                  {item.fields.type &&
+                    item.fields.type["en-US"] == "shortcut" &&
+                    item.fields.root &&
+                    item.fields.root["en-US"] == "keys" &&
+                    [
+                      "Search",
+                      "Write",
+                      "Analytics API key",
+                      "Usage API key",
+                      "Monitoring API key",
+                    ].map((keyName) => {
+                      return (
+                        <div
+                          className="flex w-full p-2 bg-white shadow mb-1"
+                          key={keyName}
+                        >
+                          <div className="flex-grow pl-2">
+                            <div className="pb-1 font-semibold">{keyName}</div>
+                          </div>
+                          <Icon.Copy
+                              className="m-auto text-gray-500"
+                              style={{ width: 18, height: 18 }}
+                            />
                         </div>
                       );
                     })}
