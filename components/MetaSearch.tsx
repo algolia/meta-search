@@ -80,6 +80,18 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
     };
   }, []);
 
+  useEffect(() => {
+    autocomplete.setIsOpen(isOpen);
+
+    if (!isOpen) {
+      autocomplete.setCollections([]);
+      autocomplete.setContext({});
+      autocomplete.setQuery("");
+      autocomplete.setActiveItemId(null);
+      autocomplete.setStatus("idle");
+    }
+  }, [isOpen]);
+
   if (!isOpen) {
     return null;
   }
