@@ -1,5 +1,6 @@
 import React, { useMemo, useEffect } from "react";
 import { createTagsPlugin } from "@algolia/autocomplete-plugin-tags";
+import { useKey } from "react-use";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
@@ -18,10 +19,11 @@ import { useAutocomplete } from "../hooks";
 
 type MetaSearchProps = {
   isOpen: boolean;
+  onOpen(): void;
   onClose(): void;
 };
 
-export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
+export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
   const plugins = useMemo(
     () => [
       createListenerPlugin({}),
@@ -79,10 +81,11 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      // @todo This conflicts with the `Escape` key being used to close the modal.
+      // We might use a different key for this behavior.
       if (event.key === "Escape" && state.context.root !== "scope") {
         event.preventDefault();
         event.stopPropagation();
-
         autocomplete.setContext({ root: "scope" });
         autocomplete.refresh();
       }
@@ -106,6 +109,36 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
       autocomplete.setStatus("idle");
     }
   }, [isOpen]);
+
+  function isMetaPlusK(event: KeyboardEvent) {
+    return event.key === "k" && event.metaKey;
+  }
+
+  useKey(
+    isMetaPlusK,
+    (event) => {
+      event.preventDefault();
+
+      if (isOpen) {
+        onClose();
+      } else {
+        onOpen();
+      }
+    },
+    undefined,
+    [isOpen]
+  );
+
+  useKey(
+    "Escape",
+    () => {
+      if (isOpen) {
+        onClose();
+      }
+    },
+    undefined,
+    [isOpen]
+  );
 
   if (!isOpen) {
     return null;
