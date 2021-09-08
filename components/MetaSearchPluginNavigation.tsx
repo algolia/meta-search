@@ -9,6 +9,7 @@ import apps from "../data/apps.json";
 import indexTop from "../data/T2ZX9HO66V__index_top.json";
 import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
 import * as Icon from "react-feather";
+import { ArrowRightIcon } from "./ArrowRightIcon";
 
 type SetRootParams = {
   root: string;
@@ -122,7 +123,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                 <MetaSearchItemWrapper item={item}>
                   <div className="aa-ItemContent">
                     <div className="aa-ItemIcon aa-ItemIcon--alignTop">
-                      <IconItem />
+                      {item.fields.path ? <IconItem /> : <ArrowRightIcon />}
                     </div>
                     <div className="aa-ItemContentBody">
                       <div className="aa-ItemContentTitle">
@@ -135,7 +136,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                       )}
                     </div>
                   </div>
-                  <div className="aa-ItemActions">
+                  <div className="aa-ItemActions flex items-center">
                     <button
                       className="aa-ItemActionButton aa-DesktopOnly aa-ActiveOnly"
                       type="button"
@@ -166,7 +167,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                     />
                   </div>
                   <div className="text-center text-xs text-gray-500 pt-4">
-                    {item.fields.category && item.fields.category["en-US"]}
+                    {item.fields.category["en-US"]}
                   </div>
                   <h1 className="text-xl text-center pb-4">
                     {item.fields.name["en-US"]}

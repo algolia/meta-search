@@ -197,7 +197,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                         {tags.map((tag) => (
                           <li
                             key={tag.label}
-                            className="flex items-center space-x-2 py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
+                            className="flex capitalize items-center space-x-2 py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
                           >
                             <span>{tag.label}</span>
                             <svg
