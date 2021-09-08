@@ -33,6 +33,13 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
         transformSource() {
           return undefined;
         },
+        // Next line is only necessary for now because we're using the former
+        // version of `@algolia/autocomplete-shared-utils`, not the new one that
+        // will go out with the Tags plugin. This former version doesn't export
+        // `noop` as the new version does, so the default value of `onChange` is
+        // undefined and it results in a runtime error.
+        // I will remove once the Tags plugin is released.
+        onChange() {},
       }),
     ],
     []
@@ -63,6 +70,10 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
   const panelRef = React.useRef<HTMLDivElement>(null);
+  const { tags, setTags } = state.context.tagsPlugin || {
+    tags: [],
+    setTags: () => {},
+  };
 
   useCloseVirtualKeyboardOnTouchMove({ inputRef });
 
@@ -100,6 +111,10 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
     return null;
   }
 
+  const inputProps = autocomplete.getInputProps({
+    inputElement: inputRef.current,
+  });
+
   return (
     <div>
       <div
@@ -127,15 +142,29 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
                     <SearchIcon className="aa-SubmitIcon mx-auto" />
                   </button>
                 </label>
-                {state.context.tagsPlugin.tags.length > 0 && (
-                  <div className="mr-2">
+                {tags.length > 0 && (
+                  <div className="mr-1">
                     <ul className="list-none flex items-center space-x-1">
-                      {state.context.tagsPlugin.tags.map((tag) => (
+                      {tags.map((tag) => (
                         <li
                           key={tag.label}
-                          className="block py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
+                          className="flex items-center space-x-2 py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
                         >
-                          {tag.label}
+                          <span>{tag.label}</span>
+                          <svg
+                            className="h-3 w-3 cursor-pointer"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            onClick={() => tag.remove()}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
                         </li>
                       ))}
                     </ul>
@@ -146,9 +175,20 @@ export function MetaSearch({ isOpen, onClose }: MetaSearchProps) {
                 <input
                   className="aa-Input"
                   ref={inputRef}
-                  {...autocomplete.getInputProps({
-                    inputElement: inputRef.current,
-                  })}
+                  {...inputProps}
+                  onKeyDown={(event) => {
+                    inputProps.onKeyDown(event);
+
+                    if (
+                      event.key === "Backspace" &&
+                      inputRef.current?.selectionStart === 0 &&
+                      inputRef.current?.selectionEnd === 0
+                    ) {
+                      const newTags = tags.slice(0, -1);
+
+                      setTags(newTags);
+                    }
+                  }}
                   autoFocus={true}
                 />
               </div>

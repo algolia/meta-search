@@ -10,10 +10,6 @@ import indexTop from "../data/T2ZX9HO66V__index_top.json";
 import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
 import * as Icon from "react-feather";
 
-function hasKeywords(query: string, keywords: string[]) {
-  return keywords.some((keyword) => query.startsWith(`${keyword} `));
-}
-
 type SetRootParams = {
   root: string;
   state: MetaSearchState;
@@ -28,20 +24,27 @@ function setRoot({ root, state, setContext }: SetRootParams) {
 
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
-    onStateChange({ state, setContext }) {
-      if (state.query) {
-        if (hasKeywords(state.query, ["configure", "configuration"])) {
-          setRoot({ root: "configure", state, setContext });
-        } else if (hasKeywords(state.query, ["applications", "apps", "app"])) {
-          setRoot({ root: "apps", state, setContext });
-        } else if (hasKeywords(state.query, ["index", "indexes", "indices"])) {
-          setRoot({ root: "index", state, setContext });
-        } else if (hasKeywords(state.query, ["monitoring"])) {
-          setRoot({ root: "monitoring", state, setContext });
-        } else {
-          setRoot({ root: "", state, setContext });
+    onStateChange({ state, setContext, setQuery }) {
+      const { tags, addTags } = state.context.tagsPlugin;
+
+      const roots = {
+        configure: ["configure", "configuration"],
+        apps: ["applications", "apps", "app"],
+        index: ["index", "indexes", "indices"],
+        monitoring: ["monitoring"],
+      };
+
+      Object.keys(roots).forEach((root) => {
+        const tokens = roots[root as keyof typeof roots];
+
+        if (tokens.map((token) => `${token} `).includes(state.query)) {
+          setQuery("");
+          addTags([{ label: root }]);
+          setRoot({ root, state, setContext });
         }
-      } else {
+      });
+
+      if (tags.length === 0) {
         setRoot({ root: "scope", state, setContext });
       }
     },
@@ -86,9 +89,15 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
 
             return toItemUrl(item.fields.path["en-US"]);
           },
-          onSelect({ item }) {
-            if (item.fields.root) {
-              setQuery(`${item.fields.root["en-US"]} `);
+          onSelect({ item, setContext }) {
+            if (item.fields.path) {
+              window.location.assign(item.fields.path["en-US"]);
+            } else if (item.fields.root) {
+              state.context.tagsPlugin.addTags([
+                { label: item.fields.root["en-US"] },
+              ]);
+              setQuery("");
+              setRoot({ root: item.fields.root["en-US"], state, setContext });
             }
           },
           components: {
@@ -172,8 +181,13 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                       item.fields.params["en-US"] &&
                       item.fields.params["en-US"].map((param) => {
                         return (
-                          <div className="flex py-4 border-b border-gray-300 text-gray-800 text-sm items-center" key={param}>
-                            <code className="flex-shrink-0 bg-gray-200 border-gray-300 border px-1 pt-0.5 rounded-lg text-xs font-semibold">{param}</code>
+                          <div
+                            className="flex py-4 border-b border-gray-300 text-gray-800 text-sm items-center"
+                            key={param}
+                          >
+                            <code className="flex-shrink-0 bg-gray-200 border-gray-300 border px-1 pt-0.5 rounded-lg text-xs font-semibold">
+                              {param}
+                            </code>
                             <div className=" text-gray-500 text-right flex-grow flex-nowrap">
                               Current Value:{" "}
                               <code className=" text-gray-800">
@@ -231,9 +245,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                             />
                           </div>
                           <div className="flex-grow pl-2">
-                            <div className="pb-1">
-                              {index.name}
-                            </div>
+                            <div className="pb-1">{index.name}</div>
                             <div className="text-gray-500 text-sm">
                               {index.entries} records
                             </div>
@@ -261,9 +273,9 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                             <div className="pb-1">{keyName}</div>
                           </div>
                           <Icon.Copy
-                              className="m-auto text-gray-500"
-                              style={{ width: 18, height: 18 }}
-                            />
+                            className="m-auto text-gray-500"
+                            style={{ width: 18, height: 18 }}
+                          />
                         </div>
                       );
                     })}
