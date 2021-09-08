@@ -58,7 +58,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
                 style={{ width: "18px" }}
               />
             </div>
-            <div className="flex items-center pl-6 gap-2">
+            <div className="flex flex-grow items-center pl-6 gap-2">
               <Icon.Server
                 className="text-gray-600"
                 style={{ width: "24px" }}
@@ -70,14 +70,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               <Icon.ChevronDown
                 className="text-gray-400"
                 style={{ width: "18px" }}
-              />
-            </div>
-
-            <div className="flex-grow px-20">
-              <MetaSearch
-                isOpen={isSearchOpen}
-                onOpen={() => setIsSearchOpen(true)}
-                onClose={() => setIsSearchOpen(false)}
               />
             </div>
 
@@ -118,6 +110,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </div>
           </header>
           <Component {...pageProps} />
+          <MetaSearch
+            isOpen={isSearchOpen}
+            onOpen={() => setIsSearchOpen(true)}
+            onClose={() => setIsSearchOpen(false)}
+          />
         </div>
       </div>
     </>

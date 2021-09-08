@@ -110,6 +110,12 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    // We need to use the DOM API
+    // because Next.js doesn't let us access the `body`
+    document.querySelector("body")?.classList.toggle("overflow-hidden", isOpen);
+  }, [isOpen]);
+
   function isMetaPlusK(event: KeyboardEvent) {
     return event.key === "k" && event.metaKey;
   }
@@ -151,142 +157,163 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
   return (
     <div>
       <div
-        className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-40"
+        className="absolute inset-0 bg-gray-500 bg-opacity-40"
         onClick={onClose}
-      />
-      <div className="absolute top-40 left-80 right-80">
+      >
         <div
-          className="aa-Autocomplete w-full bg-white rounded overflow-hidden"
-          {...autocomplete.getRootProps({})}
+          onClick={(event) => event.stopPropagation()}
+          className="mt-0 h-full sm:h-auto sm:mt-44 mx-auto w-full max-w-3xl"
         >
-          <div className="flex items-stretch p-2 space-x-6">
-            <form
-              ref={formRef}
-              className="aa-Form"
-              {...autocomplete.getFormProps({ inputElement: inputRef.current })}
-            >
-              <div className="aa-InputWrapperPrefix">
-                <label className="aa-Label" {...autocomplete.getLabelProps({})}>
-                  <button
-                    className="aa-SubmitButton"
-                    type="submit"
-                    title="Submit"
+          <div
+            className="aa-Autocomplete w-full h-full bg-white rounded flex flex-col overflow-hidden"
+            {...autocomplete.getRootProps({})}
+          >
+            <div className="flex items-stretch p-2 space-x-6 flex-none">
+              <form
+                ref={formRef}
+                className="aa-Form"
+                {...autocomplete.getFormProps({
+                  inputElement: inputRef.current,
+                })}
+              >
+                <div className="aa-InputWrapperPrefix">
+                  <label
+                    className="aa-Label"
+                    {...autocomplete.getLabelProps({})}
                   >
-                    <SearchIcon className="aa-SubmitIcon mx-auto" />
-                  </button>
-                </label>
-                {tags.length > 0 && (
-                  <div className="mr-1">
-                    <ul className="list-none flex items-center space-x-1">
-                      {tags.map((tag) => (
-                        <li
-                          key={tag.label}
-                          className="flex items-center space-x-2 py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
-                        >
-                          <span>{tag.label}</span>
-                          <svg
-                            className="h-3 w-3 cursor-pointer"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            onClick={() => tag.remove()}
+                    <button
+                      className="aa-SubmitButton"
+                      type="submit"
+                      title="Submit"
+                    >
+                      <SearchIcon className="aa-SubmitIcon mx-auto" />
+                    </button>
+                  </label>
+                  {tags.length > 0 && (
+                    <div className="mr-1">
+                      <ul className="list-none flex items-center space-x-1">
+                        {tags.map((tag) => (
+                          <li
+                            key={tag.label}
+                            className="flex items-center space-x-2 py-2 px-3 bg-blue-100 text-blue-800 rounded text-sm leading-none"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-              <div className="aa-InputWrapper">
-                <input
-                  className="aa-Input"
-                  ref={inputRef}
-                  {...inputProps}
-                  onKeyDown={(event) => {
-                    inputProps.onKeyDown(event);
+                            <span>{tag.label}</span>
+                            <svg
+                              className="h-3 w-3 cursor-pointer"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              onClick={() => tag.remove()}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                <div className="aa-InputWrapper">
+                  <input
+                    className="aa-Input"
+                    ref={inputRef}
+                    {...inputProps}
+                    onKeyDown={(event) => {
+                      inputProps.onKeyDown(event);
 
-                    if (
-                      event.key === "Backspace" &&
-                      inputRef.current?.selectionStart === 0 &&
-                      inputRef.current?.selectionEnd === 0
-                    ) {
-                      const newTags = tags.slice(0, -1);
+                      if (
+                        event.key === "Backspace" &&
+                        inputRef.current?.selectionStart === 0 &&
+                        inputRef.current?.selectionEnd === 0
+                      ) {
+                        const newTags = tags.slice(0, -1);
 
-                      setTags(newTags);
-                    }
-                  }}
-                  autoFocus={true}
-                />
-              </div>
-              <div className="aa-InputWrapperSuffix">
-                <button className="aa-ClearButton" title="Clear" type="reset">
-                  <ClearIcon className="aa-ClearIcon" />
+                        setTags(newTags);
+                      }
+                    }}
+                    autoFocus={true}
+                  />
+                </div>
+                <div className="aa-InputWrapperSuffix">
+                  <button className="aa-ClearButton" title="Clear" type="reset">
+                    <ClearIcon className="aa-ClearIcon" />
+                  </button>
+                </div>
+              </form>
+              <div>
+                <button
+                  onClick={onClose}
+                  className="py-2 px-4 -ml-4 h-full text-gray-600"
+                >
+                  Close
                 </button>
               </div>
-            </form>
-            <div>
-              <button
-                onClick={onClose}
-                className="py-2 px-4 -ml-4 h-full text-gray-600"
-              >
-                Close
-              </button>
             </div>
-          </div>
-          <div
-            ref={panelRef}
-            className={[state.status === "stalled" && "aa-Panel--stalled"]
-              .filter(Boolean)
-              .join(" ")}
-            {...autocomplete.getPanelProps({})}
-          >
-            <div className="aa-PanelLayout flex">
-              <div className={`w-6/12 aa-Panel--scrollable`}>
-                {state.collections.map((collection, index) => {
-                  const items = collection.items;
-                  const source = collection.source as MetaSearchSource<any>;
-                  const { Header, Item } = source.components;
-                  return (
-                    items.length > 0 && (
-                      <section key={`source-${index}`} className="aa-Source">
-                        {Header && (
-                          <Header items={items} source={source} state={state} />
-                        )}
-                        <ul
-                          className="aa-List"
-                          {...autocomplete.getListProps()}
-                        >
-                          {items.map((item) => {
-                            return (
-                              <li
-                                key={item.objectID}
-                                className="aa-Item"
-                                {...autocomplete.getItemProps({ item, source })}
-                              >
-                                <Item
-                                  item={item}
-                                  source={source}
-                                  state={state}
-                                />
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </section>
-                    )
-                  );
-                })}
+            <div
+              ref={panelRef}
+              className={[
+                state.status === "stalled" && "aa-Panel--stalled",
+                "aa-Panel relative flex-grow",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              {...autocomplete.getPanelProps({})}
+            >
+              <div className="aa-PanelLayout flex max-h-full">
+                <div
+                  className={`w-6/12 aa-Panel--scrollable h-full sm:max-h-96 max-h-full`}
+                >
+                  {state.collections.map((collection, index) => {
+                    const items = collection.items;
+                    const source = collection.source as MetaSearchSource<any>;
+                    const { Header, Item } = source.components;
+                    return (
+                      items.length > 0 && (
+                        <section key={`source-${index}`} className="aa-Source">
+                          {Header && (
+                            <Header
+                              items={items}
+                              source={source}
+                              state={state}
+                            />
+                          )}
+                          <ul
+                            className="aa-List"
+                            {...autocomplete.getListProps()}
+                          >
+                            {items.map((item) => {
+                              return (
+                                <li
+                                  key={item.objectID}
+                                  className="aa-Item"
+                                  {...autocomplete.getItemProps({
+                                    item,
+                                    source,
+                                  })}
+                                >
+                                  <Item
+                                    item={item}
+                                    source={source}
+                                    state={state}
+                                  />
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </section>
+                      )
+                    );
+                  })}
+                </div>
+                <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:max-h-96 max-h-full">
+                  <MetaSearchPanelSwitch state={state} fallback={null} />
+                </aside>
               </div>
-              <aside className="bg-gray-100 w-6/12 p-4">
-                <MetaSearchPanelSwitch state={state} fallback={null} />
-              </aside>
             </div>
           </div>
         </div>
