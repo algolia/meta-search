@@ -16,6 +16,7 @@ import { MetaSearchSource } from "./types";
 import { useCloseVirtualKeyboardOnTouchMove } from "../hooks/useCloseVirtualKeyboardOnTouchMove";
 
 import { useAutocomplete } from "../hooks";
+import { LoadingIcon } from "./LoadingIcon";
 
 type MetaSearchProps = {
   isOpen: boolean;
@@ -76,6 +77,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
     tags: [],
     setTags: () => {},
   };
+  const hasItems = state.collections.some(({ items }) => items.length > 0);
 
   useCloseVirtualKeyboardOnTouchMove({ inputRef });
 
@@ -116,12 +118,8 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
     document.querySelector("body")?.classList.toggle("overflow-hidden", isOpen);
   }, [isOpen]);
 
-  function isMetaPlusK(event: KeyboardEvent) {
-    return event.key === "k" && event.metaKey;
-  }
-
   useKey(
-    isMetaPlusK,
+    (event) => event.key === "k" && event.metaKey,
     (event) => {
       event.preventDefault();
 
@@ -186,7 +184,11 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                       type="submit"
                       title="Submit"
                     >
-                      <SearchIcon className="aa-SubmitIcon mx-auto" />
+                      {["loading", "stalled"].includes(state.status) ? (
+                        <LoadingIcon className="aa-LoadingIcon mx-auto" />
+                      ) : (
+                        <SearchIcon className="aa-SubmitIcon mx-auto" />
+                      )}
                     </button>
                   </label>
                   {tags.length > 0 && (
@@ -254,70 +256,75 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                 </button>
               </div>
             </div>
-            <div
-              ref={panelRef}
-              className={[
-                // @todo There's a bug where the status gets stalled when adding
-                // tags from the navigation plugin's onStateChange lifecyle.
-                // Until it's resolved, no need to show the class
-                //state.status === "stalled" && "aa-Panel--stalled",
-                "aa-Panel relative flex-grow",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              {...autocomplete.getPanelProps({})}
-            >
-              <div className="aa-PanelLayout flex max-h-full">
-                <div
-                  className={`w-6/12 aa-Panel--scrollable h-full sm:max-h-96 max-h-full`}
-                >
-                  {state.collections.map((collection, index) => {
-                    const items = collection.items;
-                    const source = collection.source as MetaSearchSource<any>;
-                    const { Header, Item } = source.components;
-                    return (
-                      items.length > 0 && (
-                        <section key={`source-${index}`} className="aa-Source">
-                          {Header && (
-                            <Header
-                              items={items}
-                              source={source}
-                              state={state}
-                            />
-                          )}
-                          <ul
-                            className="aa-List"
-                            {...autocomplete.getListProps()}
+            {hasItems && (
+              <div
+                ref={panelRef}
+                className={[
+                  // @todo There's a bug where the status gets stalled when adding
+                  // tags from the navigation plugin's onStateChange lifecyle.
+                  // Until it's resolved, no need to show the class
+                  //state.status === "stalled" && "aa-Panel--stalled",
+                  "aa-Panel relative flex-grow",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                {...autocomplete.getPanelProps({})}
+              >
+                <div className="aa-PanelLayout flex max-h-full">
+                  <div
+                    className={`w-6/12 aa-Panel--scrollable h-full sm:max-h-96 max-h-full`}
+                  >
+                    {state.collections.map((collection, index) => {
+                      const items = collection.items;
+                      const source = collection.source as MetaSearchSource<any>;
+                      const { Header, Item } = source.components;
+                      return (
+                        items.length > 0 && (
+                          <section
+                            key={`source-${index}`}
+                            className="aa-Source"
                           >
-                            {items.map((item) => {
-                              return (
-                                <li
-                                  key={item.objectID}
-                                  className="aa-Item"
-                                  {...autocomplete.getItemProps({
-                                    item,
-                                    source,
-                                  })}
-                                >
-                                  <Item
-                                    item={item}
-                                    source={source}
-                                    state={state}
-                                  />
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </section>
-                      )
-                    );
-                  })}
+                            {Header && (
+                              <Header
+                                items={items}
+                                source={source}
+                                state={state}
+                              />
+                            )}
+                            <ul
+                              className="aa-List"
+                              {...autocomplete.getListProps()}
+                            >
+                              {items.map((item) => {
+                                return (
+                                  <li
+                                    key={item.objectID}
+                                    className="aa-Item"
+                                    {...autocomplete.getItemProps({
+                                      item,
+                                      source,
+                                    })}
+                                  >
+                                    <Item
+                                      item={item}
+                                      source={source}
+                                      state={state}
+                                    />
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </section>
+                        )
+                      );
+                    })}
+                  </div>
+                  <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:max-h-96 max-h-full">
+                    <MetaSearchPanelSwitch state={state} fallback={null} />
+                  </aside>
                 </div>
-                <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:max-h-96 max-h-full">
-                  <MetaSearchPanelSwitch state={state} fallback={null} />
-                </aside>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
