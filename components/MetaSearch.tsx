@@ -257,7 +257,10 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
             <div
               ref={panelRef}
               className={[
-                state.status === "stalled" && "aa-Panel--stalled",
+                // @todo There's a bug where the status gets stalled when adding
+                // tags from the navigation plugin's onStateChange lifecyle.
+                // Until it's resolved, no need to show the class
+                //state.status === "stalled" && "aa-Panel--stalled",
                 "aa-Panel relative flex-grow",
               ]
                 .filter(Boolean)
