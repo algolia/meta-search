@@ -82,25 +82,6 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
   useCloseVirtualKeyboardOnTouchMove({ inputRef });
 
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      // @todo This conflicts with the `Escape` key being used to close the modal.
-      // We might use a different key for this behavior.
-      if (event.key === "Escape" && state.context.root !== "scope") {
-        event.preventDefault();
-        event.stopPropagation();
-        autocomplete.setContext({ root: "scope" });
-        autocomplete.refresh();
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
-
-  useEffect(() => {
     autocomplete.setIsOpen(isOpen);
 
     if (!isOpen) {
@@ -153,12 +134,14 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
   useKey(
     "Escape",
     () => {
-      if (isOpen) {
+      if (tags.length > 0) {
+        setTags([]);
+      } else if (isOpen) {
         onClose();
       }
     },
     undefined,
-    [isOpen]
+    [isOpen, tags]
   );
 
   if (!isOpen) {
