@@ -242,7 +242,12 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                   />
                 </div>
                 <div className="aa-InputWrapperSuffix">
-                  <button className="aa-ClearButton" title="Clear" type="reset">
+                  <button
+                    className="aa-ClearButton"
+                    title="Clear"
+                    type="reset"
+                    onClick={() => setTags([])}
+                  >
                     <ClearIcon className="aa-ClearIcon" />
                   </button>
                 </div>
