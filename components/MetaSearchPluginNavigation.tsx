@@ -2,30 +2,17 @@ import { getAlgoliaResults } from "@algolia/autocomplete-js";
 
 import { searchClient } from "../src/searchClient";
 import { toItemUrl } from "../utils/toItemUrl";
-import { MetaSearchPlugin, MetaSearchState } from "./types";
+import { MetaSearchPlugin } from "./types";
 import { MetaSearchItemWrapper } from "./MetaSearchItemWrapper";
 import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 import apps from "../data/apps.json";
 import indexTop from "../data/T2ZX9HO66V__index_top.json";
-import { AutocompleteContext, StateUpdater } from "@algolia/autocomplete-core";
 import * as Icon from "react-feather";
 import { ArrowRightIcon } from "./ArrowRightIcon";
 
-type SetRootParams = {
-  root: string;
-  state: MetaSearchState;
-  setContext: StateUpdater<AutocompleteContext>;
-};
-
-function setRoot({ root, state, setContext }: SetRootParams) {
-  if (root !== state.context.root) {
-    setContext({ root });
-  }
-}
-
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
-    onStateChange({ state, setContext, setQuery }) {
+    onStateChange({ state, setQuery }) {
       const { tags, setTags } = state.context.tagsPlugin;
 
       const roots = {
@@ -41,17 +28,8 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
         if (tokens.map((token) => `${token} `).includes(state.query)) {
           setQuery("");
           setTags([{ label: root }]);
-          setRoot({ root, state, setContext });
         }
       });
-
-      if (tags.length === 0) {
-        if (state.query === "") {
-          setRoot({ root: "scope", state, setContext });
-        } else {
-          setRoot({ root: "", state, setContext });
-        }
-      }
     },
     getSources({ state, query, setQuery }) {
       if (state.context.root === "apps" || state.context.root === "indices") {
@@ -102,7 +80,6 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                 { label: item.fields.root["en-US"] },
               ]);
               setQuery("");
-              setRoot({ root: item.fields.root["en-US"], state, setContext });
             }
           },
           components: {

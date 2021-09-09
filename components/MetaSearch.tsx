@@ -118,6 +118,23 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
     document.querySelector("body")?.classList.toggle("overflow-hidden", isOpen);
   }, [isOpen]);
 
+  useEffect(() => {
+    if (tags.length === 0) {
+      if (state.query === "") {
+        autocomplete.setContext({ root: "scope" });
+      } else {
+        autocomplete.setContext({ root: "" });
+      }
+      autocomplete.refresh();
+    } else {
+      const root = tags[0].label;
+
+      if (root !== state.context.root) {
+        autocomplete.setContext({ root });
+      }
+    }
+  }, [tags, state.query, autocomplete]);
+
   useKey(
     (event) => event.key === "k" && event.metaKey,
     (event) => {
