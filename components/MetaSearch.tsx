@@ -176,7 +176,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
       >
         <div
           onClick={(event) => event.stopPropagation()}
-          className="mt-0 h-full sm:h-auto sm:mt-44 mx-auto w-full max-w-3xl"
+          className="mt-0 h-full sm:h-auto sm:mt-44 mx-auto w-full max-w-5xl"
         >
           <div
             className="aa-Autocomplete w-full h-full bg-white rounded flex flex-col overflow-hidden"
@@ -293,7 +293,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
               >
                 <div className="aa-PanelLayout flex max-h-full">
                   <div
-                    className={`w-6/12 aa-Panel--scrollable h-full sm:max-h-96 max-h-full`}
+                    className={`w-6/12 aa-Panel--scrollable h-full sm:h-[768px]`}
                   >
                     {state.collections.map((collection, index) => {
                       const items = collection.items;
@@ -340,7 +340,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                       );
                     })}
                   </div>
-                  <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:max-h-96 max-h-full">
+                  <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:h-[768px]">
                     <MetaSearchPanelSwitch state={state} fallback={null} />
                   </aside>
                 </div>
