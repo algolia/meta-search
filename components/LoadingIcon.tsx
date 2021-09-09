@@ -7,8 +7,8 @@ export function LoadingIcon(props: React.SVGProps<SVGSVGElement>) {
         fill="none"
         r="35"
         stroke="currentColor"
-        stroke-dasharray="164.93361431346415 56.97787143782138"
-        stroke-width="6"
+        strokeDasharray="164.93361431346415 56.97787143782138"
+        strokeWidth="6"
       >
         <animateTransform
           attributeName="transform"
