@@ -46,7 +46,11 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
       });
 
       if (tags.length === 0) {
-        setRoot({ root: "scope", state, setContext });
+        if (state.query === "") {
+          setRoot({ root: "scope", state, setContext });
+        } else {
+          setRoot({ root: "", state, setContext });
+        }
       }
     },
     getSources({ state, query, setQuery }) {
