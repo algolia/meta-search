@@ -72,10 +72,8 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
 
             return toItemUrl(item.fields.path["en-US"]);
           },
-          onSelect({ item, setContext }) {
-            if (item.fields.path) {
-              window.location.assign(item.fields.path["en-US"]);
-            } else if (item.fields.root) {
+          onSelect({ item }) {
+            if (!item.fields.path && item.fields.root) {
               state.context.tagsPlugin.setTags([
                 { label: item.fields.root["en-US"] },
               ]);

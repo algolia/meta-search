@@ -1,6 +1,7 @@
 import React, { useMemo, useEffect } from "react";
 import { createTagsPlugin } from "@algolia/autocomplete-plugin-tags";
 import { useKey } from "react-use";
+import { useRouter } from "next/router";
 
 import { ClearIcon } from "./ClearIcon";
 import { SearchIcon } from "./SearchIcon";
@@ -25,6 +26,7 @@ type MetaSearchProps = {
 };
 
 export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
+  const router = useRouter();
   const plugins = useMemo(
     () => [
       createListenerPlugin({}),
@@ -69,6 +71,11 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
           return Object.values(rest);
       }
     },
+    navigator: {
+      navigate({ itemUrl }) {
+        router.push(itemUrl);
+      },
+    },
   });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -82,6 +89,14 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
   useCloseVirtualKeyboardOnTouchMove({ inputRef });
 
   useEffect(() => {
+    router.events.on("routeChangeStart", onClose);
+
+    return () => {
+      router.events.off("routeChangeStart", onClose);
+    };
+  }, []);
+
+  useEffect(() => {
     autocomplete.setIsOpen(isOpen);
 
     if (!isOpen) {
@@ -90,6 +105,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
       autocomplete.setQuery("");
       autocomplete.setActiveItemId(null);
       autocomplete.setStatus("idle");
+      setTags([]);
     }
   }, [isOpen]);
 
