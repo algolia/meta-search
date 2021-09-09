@@ -26,7 +26,7 @@ function setRoot({ root, state, setContext }: SetRootParams) {
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
     onStateChange({ state, setContext, setQuery }) {
-      const { tags, addTags } = state.context.tagsPlugin;
+      const { tags, setTags } = state.context.tagsPlugin;
 
       const roots = {
         configure: ["configure", "configuration"],
@@ -40,7 +40,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
 
         if (tokens.map((token) => `${token} `).includes(state.query)) {
           setQuery("");
-          addTags([{ label: root }]);
+          setTags([{ label: root }]);
           setRoot({ root, state, setContext });
         }
       });
@@ -94,7 +94,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
             if (item.fields.path) {
               window.location.assign(item.fields.path["en-US"]);
             } else if (item.fields.root) {
-              state.context.tagsPlugin.addTags([
+              state.context.tagsPlugin.setTags([
                 { label: item.fields.root["en-US"] },
               ]);
               setQuery("");
