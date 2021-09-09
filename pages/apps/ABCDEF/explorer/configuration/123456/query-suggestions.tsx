@@ -1,3 +1,3 @@
 export default function TypoTolerance() {
-  return <h1>Synonyms</h1>;
+  return <h1>Query Suggestions</h1>;
 }

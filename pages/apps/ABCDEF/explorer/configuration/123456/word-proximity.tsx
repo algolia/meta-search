@@ -1,5 +1,3 @@
-export default function Configure() {
-  return (
-    <h1>Word Proximity</h1>
-  )
+export default function TypoTolerance() {
+  return <h1>Word proximity</h1>;
 }

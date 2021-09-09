@@ -1,5 +1,3 @@
 export default function Configure() {
-  return (
-    <h1>Pagination</h1>
-  )
+  return <h1>Pagination</h1>;
 }

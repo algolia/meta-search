@@ -1,5 +1,3 @@
 export default function Configure() {
-  return (
-    <h1>Segmentation and Decompounding</h1>
-  )
+  return <h1>Segmentation and Decompounding</h1>;
 }

@@ -1,5 +1,3 @@
 export default function Configure() {
-  return (
-    <h1>Dictionnaries</h1>
-  )
+  return <h1>Dictionnaries</h1>;
 }
