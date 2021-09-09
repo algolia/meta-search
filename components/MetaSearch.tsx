@@ -293,7 +293,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
               >
                 <div className="aa-PanelLayout flex max-h-full">
                   <div
-                    className={`w-6/12 aa-Panel--scrollable h-full sm:h-[768px]`}
+                    className={`w-full sm:w-6/12 aa-Panel--scrollable h-full sm:h-[768px]`}
                   >
                     {state.collections.map((collection, index) => {
                       const items = collection.items;
@@ -340,7 +340,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
                       );
                     })}
                   </div>
-                  <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:h-[768px]">
+                  <aside className="bg-gray-100 w-6/12 p-4 aa-Panel--scrollable h-full sm:h-[768px] hidden sm:block">
                     <MetaSearchPanelSwitch state={state} fallback={null} />
                   </aside>
                 </div>
