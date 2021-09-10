@@ -4,12 +4,13 @@ Design
 - Better style for flow entries
 - Footer tooltip about action (goto, search)
 - Less interactive design for preview (no card, links only)
-- Bigger Icons
+- Bigger Icons (done)
 - Footer help nav
 
 Sources
-- Academy
+- Academy (done)
 - Admin
+- Github repos
 - Better analytics ranking
 - Feedback no results
 
