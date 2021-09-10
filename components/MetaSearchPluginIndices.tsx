@@ -1,7 +1,6 @@
 import Link from "next/link";
-
+import * as Icon from "react-feather";
 import { MetaSearchIndexItem, MetaSearchPlugin } from "./types";
-
 import indices from "../data/T2ZX9HO66V__index_top.json";
 
 function mapWithObjectId<TItem extends MetaSearchIndexItem>(items: TItem[]) {
@@ -53,10 +52,13 @@ export function createIndicesPlugin(): MetaSearchPlugin<
                 <Link href="#">
                   <a className="aa-ItemLink">
                     <div className="aa-ItemContent">
+                    <div className="border border-indigo-200 rounded flex items-center p-2 text-indigo-500" style={{width:40, height:40}}>
+                      <Icon.Server/>
+                    </div>
                       <div className="aa-ItemContentBody">
                         <div className="aa-ItemContentTitle">{item.name}</div>
-                        <div className="aa-ItemContentSubtitle">
-                          {item.updatedAt}
+                        <div className="aa-ItemContentSubtitle text-gray-500">
+                          {item.entries} records
                         </div>
                       </div>
                     </div>

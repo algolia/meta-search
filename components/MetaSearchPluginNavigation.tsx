@@ -8,7 +8,6 @@ import indexSettings from "../data/T2ZX9HO66V__dev_meta.json";
 import apps from "../data/apps.json";
 import indexTop from "../data/T2ZX9HO66V__index_top.json";
 import * as Icon from "react-feather";
-import { ArrowRightIcon } from "./ArrowRightIcon";
 
 export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
   return {
@@ -47,7 +46,7 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
                   indexName: "dev_meta",
                   query,
                   params: {
-                    hitsPerPage: 8,
+                    hitsPerPage: 15,
                     highlightPreTag: "<mark>",
                     highlightPostTag: "</mark>",
                     facets: ["fields.type.en-US"],
@@ -101,8 +100,8 @@ export function createNavigationPlugin(): MetaSearchPlugin<any, undefined> {
               return (
                 <MetaSearchItemWrapper item={item}>
                   <div className="aa-ItemContent">
-                    <div className="aa-ItemIcon aa-ItemIcon--alignTop">
-                      {item.fields.path ? <IconItem /> : <ArrowRightIcon />}
+                    <div className="border border-indigo-200 rounded flex items-center p-2 text-indigo-500" style={{width:40, height:40}}>
+                      {item.fields.path ? <IconItem /> : <Icon.ArrowRightCircle/>}
                     </div>
                     <div className="aa-ItemContentBody">
                       <div className="aa-ItemContentTitle">

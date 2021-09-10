@@ -1,0 +1,24 @@
+
+
+Design
+- Better style for flow entries
+- Footer tooltip about action (goto, search)
+- Less interactive design for preview (no card, links only)
+- Bigger Icons
+- Footer help nav
+
+Sources
+- Academy
+- Admin
+- Better analytics ranking
+- Feedback no results
+
+Tracking
+- insights
+- amplitude
+
+Keyboard
+- right arrow to expand
+
+Scopes
+- show results with empty query after entering in a flow.

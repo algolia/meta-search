@@ -1,7 +1,6 @@
 import Link from "next/link";
-
+import * as Icon from "react-feather";
 import { MetaSearchAppItem, MetaSearchPlugin } from "./types";
-
 import apps from "../data/apps.json";
 
 function mapWithObjectId<TItem extends MetaSearchAppItem>(items: TItem[]) {
@@ -53,9 +52,12 @@ export function createApplicationsPlugin(): MetaSearchPlugin<
                 <Link href="#">
                   <a className="aa-ItemLink">
                     <div className="aa-ItemContent">
+                    <div className="border border-indigo-200 rounded flex items-center p-2 text-indigo-500" style={{width:40, height:40}}>
+                      <Icon.Package/>
+                    </div>
                       <div className="aa-ItemContentBody">
                         <div className="aa-ItemContentTitle">{item.name}</div>
-                        <div className="aa-ItemContentSubtitle">
+                        <div className="aa-ItemContentSubtitle text-gray-500">
                           {item.application_id}
                         </div>
                       </div>

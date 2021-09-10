@@ -1,5 +1,6 @@
 import { getAlgoliaResults } from "@algolia/autocomplete-js";
 import Link from "next/link";
+import * as Icon from "react-feather";
 
 import { searchClientDocs } from "../src/searchClientDocs";
 import { MetaSearchPlugin } from "./types";
@@ -42,6 +43,9 @@ export function createDocsPlugin(): MetaSearchPlugin<any, undefined> {
                 <Link href="#">
                   <a className="aa-ItemLink">
                     <div className="aa-ItemContent">
+                    <div className="border border-indigo-200 rounded flex items-center p-2 text-indigo-500" style={{width:40, height:40}}>
+                      <Icon.HelpCircle/>
+                    </div>
                       <div className="aa-ItemContentBody">
                         <div className="aa-ItemContentTitle">{item.title}</div>
                         <div className="aa-ItemContentSubtitle text-gray-500">
