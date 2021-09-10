@@ -6,6 +6,7 @@ Design
 - Less interactive design for preview (no card, links only)
 - Bigger Icons (done)
 - Footer help nav
+- Modal top positioning
 
 Sources
 - Academy (done)
