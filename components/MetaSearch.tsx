@@ -12,6 +12,7 @@ import { MetaSearchPanelSwitch } from "./MetaSearchPanelSwitch";
 import { createNavigationPlugin } from "./MetaSearchPluginNavigation";
 import { createDocsPlugin } from "./MetaSearchPluginDocs";
 import { createAcademyPlugin } from "./MetaSearchPluginAcademy";
+import { createCommunityPlugin } from "./MetaSearchPluginCommunity";
 import { createApplicationsPlugin } from "./MetaSearchPluginApplications";
 import { createIndicesPlugin } from "./MetaSearchPluginIndices";
 import { MetaSearchSource } from "./types";
@@ -36,6 +37,7 @@ export function MetaSearch({ isOpen, onOpen, onClose }: MetaSearchProps) {
       createIndicesPlugin(),
       createDocsPlugin(),
       createAcademyPlugin(),
+      createCommunityPlugin(),
       createTagsPlugin({
         transformSource() {
           return undefined;
